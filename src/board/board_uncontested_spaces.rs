@@ -7,3 +7,14 @@ impl UncontestedSpaces for Board {
         unimplemented!();
     }
 }
+
+#[cfg(test)]
+mod board_uncontested_spaces_tests {
+    // use position_types::*;
+    // use super::Board;
+
+    #[test]
+    fn it_works() {
+        assert_eq!(1, 2, "To do...");
+    }
+}
