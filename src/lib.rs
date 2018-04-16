@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 pub mod board;
 
 pub type PosIndex = usize;
@@ -19,11 +21,11 @@ pub enum Square {
 
 pub trait Queens {
     fn add_queen(&mut self, row: u32, col: u32);
-    fn get_queen_positions(&self) -> Vec<PosCoords>;
+    fn get_queen_positions(&self) -> HashSet<PosCoords>;
 }
 
 pub trait UncontestedSpaces {
-    fn get_uncontested_spaces(&self) -> Vec<PosCoords>;
+    fn get_uncontested_spaces(&self) -> HashSet<PosCoords>;
 }
 
 mod position_types {
