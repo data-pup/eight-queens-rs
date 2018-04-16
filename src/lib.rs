@@ -1,6 +1,7 @@
 pub mod board;
 
 pub type PosIndex = usize;
+/// Position coordinates. Note: These are in (x, y) format.
 pub type PosCoords = (u32, u32);
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

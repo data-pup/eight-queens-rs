@@ -46,13 +46,16 @@ impl Board {
         (row * self.width + col) as usize
     }
 
-    fn get_index_pos(&self, pos: usize) -> PosIndex {
-        unimplemented!();
+    fn get_index_pos(&self, pos: usize) -> PosCoords {
+        let y = pos as u32 / self.width;
+        let x = pos as u32 % self.width;
+        (x, y)
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use position_types::*;
     use super::Board;
 
     #[test]
@@ -62,18 +65,47 @@ mod tests {
         assert_eq!(b.height(), 8);
     }
 
+    struct PosTestCase {
+        coords: PosCoords,
+        i: PosIndex,
+    }
+
+    static POS_TEST_CASES: &[PosTestCase] = &[
+        PosTestCase {
+            coords: (0, 0),
+            i: 0_usize,
+        },
+        PosTestCase {
+            coords: (7, 0),
+            i: 7_usize,
+        },
+        PosTestCase {
+            coords: (0, 1),
+            i: 8_usize,
+        },
+        PosTestCase {
+            coords: (0, 7),
+            i: 56_usize,
+        },
+        PosTestCase {
+            coords: (7, 7),
+            i: 63_usize,
+        },
+    ];
+
     #[test]
     fn get_pos_index_works() {
         let b = Board::new();
-        let tests: &[(u32, u32, usize)] = &[
-            (0, 0, 0_usize),  // Bottom left corner.
-            (0, 7, 7_usize),  // Bottom right corner.
-            (7, 0, 56_usize), // Top left corner.
-            (7, 7, 63_usize), // Top right corner.
-        ];
-        for &(row, col, expected) in tests.into_iter() {
-            let result = b.get_pos_index(row, col);
-            assert_eq!(result, expected);
+        for PosTestCase {
+            coords: (col, row),
+            i:expected
+        } in POS_TEST_CASES.iter() {
+            let result = b.get_pos_index(*row, *col);
+            assert_eq!(result, *expected);
         }
+    }
+
+    #[test]
+    fn get_index_pos_works() {
     }
 }
