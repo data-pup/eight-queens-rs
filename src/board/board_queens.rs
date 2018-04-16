@@ -60,22 +60,30 @@ impl Board {
 
     fn get_nw_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         let dis_to_edge = ::std::cmp::min(pos.0 + 1, self.height - pos.1);
-        (0..dis_to_edge).map(|delta| (pos.0 - delta, pos.1 + delta)).collect()
+        (0..dis_to_edge)
+            .map(|delta| (pos.0 - delta, pos.1 + delta))
+            .collect()
     }
 
     fn get_ne_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         let dis_to_edge = ::std::cmp::min(self.width - pos.0, self.height - pos.1);
-        (0..dis_to_edge).map(|delta| (pos.0 + delta, pos.1 + delta)).collect()
+        (0..dis_to_edge)
+            .map(|delta| (pos.0 + delta, pos.1 + delta))
+            .collect()
     }
 
     fn get_sw_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         let dis_to_edge = ::std::cmp::min(pos.0 + 1, pos.1 + 1);
-        (0..dis_to_edge).map(|delta| (pos.0 - delta, pos.1 - delta)).collect()
+        (0..dis_to_edge)
+            .map(|delta| (pos.0 - delta, pos.1 - delta))
+            .collect()
     }
 
     fn get_se_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         let dis_to_edge = ::std::cmp::min(self.width - pos.0, pos.1 + 1);
-        (0..dis_to_edge).map(|delta| (pos.0 + delta, pos.1 + delta)).collect()
+        (0..dis_to_edge)
+            .map(|delta| (pos.0 + delta, pos.1 + delta))
+            .collect()
     }
 }
 
@@ -134,14 +142,7 @@ mod board_queens_tests {
     fn get_nw_moves_works_from_3_0() {
         let b = Board::new();
         let pos = (3, 0);
-        let expected = [
-            (3, 0),
-            (2, 1),
-            (1, 2),
-            (0, 3),
-        ].iter()
-            .cloned()
-            .collect();
+        let expected = [(3, 0), (2, 1), (1, 2), (0, 3)].iter().cloned().collect();
         let result = b.get_nw_moves(pos);
         assert_eq!(result, expected);
     }
