@@ -1,4 +1,5 @@
-use {Position, Queens};
+use Queens;
+use position_types::*;
 use super::Board;
 
 impl Queens for Board {
@@ -6,7 +7,7 @@ impl Queens for Board {
         unimplemented!();
     }
 
-    fn get_queen_positions(&self) -> Vec<Position> {
+    fn get_queen_positions(&self) -> Vec<PosCoords> {
         unimplemented!();
     }
 }

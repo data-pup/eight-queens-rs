@@ -1,7 +1,8 @@
+use Square;
+use position_types::*;
+
 mod board_queens;
 mod board_uncontested_spaces;
-
-use {Position, Square};
 
 #[derive(Debug)]
 pub struct Board {
@@ -45,7 +46,7 @@ impl Board {
         (row * self.width + col) as usize
     }
 
-    fn get_index_pos(&self, pos: usize) -> Position {
+    fn get_index_pos(&self, pos: usize) -> PosIndex {
         unimplemented!();
     }
 }
