@@ -26,6 +26,10 @@ impl Queens for Board {
             &self.get_s_moves(pos),
             &self.get_w_moves(pos),
             &self.get_e_moves(pos),
+            &self.get_nw_moves(pos),
+            &self.get_ne_moves(pos),
+            &self.get_sw_moves(pos),
+            &self.get_se_moves(pos),
         ];
         moves
             .iter()
@@ -55,6 +59,21 @@ impl Board {
     fn get_nw_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         let dis_to_edge = ::std::cmp::min(pos.0 + 1, self.height - pos.1);
         (0..dis_to_edge).map(|delta| (pos.0 - delta, pos.1 + delta)).collect()
+    }
+
+    fn get_ne_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+        let dis_to_edge = ::std::cmp::min(self.width - pos.0, self.height - pos.1);
+        (0..dis_to_edge).map(|delta| (pos.0 + delta, pos.1 + delta)).collect()
+    }
+
+    fn get_sw_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+        let dis_to_edge = ::std::cmp::min(pos.0 + 1, pos.1 + 1);
+        (0..dis_to_edge).map(|delta| (pos.0 - delta, pos.1 - delta)).collect()
+    }
+
+    fn get_se_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+        let dis_to_edge = ::std::cmp::min(self.width - pos.0, pos.1 + 1);
+        (0..dis_to_edge).map(|delta| (pos.0 + delta, pos.1 + delta)).collect()
     }
 }
 
