@@ -6,13 +6,3 @@ impl ToString for Board {
         unimplemented!();
     }
 }
-
-#[cfg(test)]
-mod board_to_string_tests {
-    use super::Board;
-
-    #[test]
-    fn it_works() {
-        assert_eq!(1, 2, "To do...");
-    }
-}
