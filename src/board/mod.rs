@@ -1,3 +1,6 @@
+mod board_queens;
+mod board_uncontested_spaces;
+
 use {Position, Square};
 
 #[derive(Debug)]
@@ -31,22 +34,13 @@ impl Board {
         self.height
     }
 
+    // FIXUP: This can be removed after implementing the queen position function.
     pub fn queen_count(&self) -> u32 {
         self.squares.iter().filter(|s| **s == Square::Queen).count() as u32
     }
+}
 
-    pub fn add_queen(&mut self, row: u32, col: u32) {
-        unimplemented!();
-    }
-
-    pub fn get_queen_positions(&self) -> Vec<usize> {
-        unimplemented!();
-    }
-
-    pub fn get_uncontested_spaces(&self) -> Vec<usize> {
-        unimplemented!();
-    }
-
+impl Board {
     fn get_pos_index(&self, row: u32, col: u32) -> usize {
         (row * self.width + col) as usize
     }
