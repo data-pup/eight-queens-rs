@@ -1,12 +1,21 @@
 use std::collections::HashSet;
 
-use UncontestedSpaces;
+use {Queens, UncontestedSpaces};
 use position_types::*;
 use super::Board;
 
 impl UncontestedSpaces for Board {
     fn get_uncontested_spaces(&self) -> HashSet<PosCoords> {
-        unimplemented!();
+        let q_pos = self.get_queen_positions();
+        let q_moves = q_pos
+            .iter()
+            .map(|&p| self.get_queen_moves(p))
+            .fold(HashSet::new(),
+                |result, curr| result.union(&curr).cloned().collect());
+        let all_spaces = self.squares.iter().enumerate()
+            .map(|(i, _)| self.get_index_pos(i))
+            .collect::<HashSet<PosCoords>>();
+        all_spaces.difference(&q_moves).cloned().collect()
     }
 }
 

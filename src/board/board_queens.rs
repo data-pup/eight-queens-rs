@@ -17,6 +17,10 @@ impl Queens for Board {
             .map(|(i, _)| self.get_index_pos(i))
             .collect::<HashSet<PosCoords>>()
     }
+
+    fn get_queen_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+        unimplemented!();
+    }
 }
 
 #[cfg(test)]
