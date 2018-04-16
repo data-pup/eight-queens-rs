@@ -98,7 +98,7 @@ mod tests {
         let b = Board::new();
         for PosTestCase {
             coords: (col, row),
-            i:expected
+            i: expected
         } in POS_TEST_CASES.iter() {
             let result = b.get_pos_index(*row, *col);
             assert_eq!(result, *expected);
@@ -107,5 +107,13 @@ mod tests {
 
     #[test]
     fn get_index_pos_works() {
+        let b = Board::new();
+        for PosTestCase {
+            coords: expected,
+            i: pos,
+        } in POS_TEST_CASES.iter() {
+            let result = b.get_index_pos(*pos);
+            assert_eq!(result, *expected);
+        }
     }
 }
