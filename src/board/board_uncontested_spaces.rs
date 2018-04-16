@@ -6,19 +6,18 @@ use {Queens, UncontestedSpaces};
 
 impl UncontestedSpaces for Board {
     fn get_uncontested_spaces(&self) -> HashSet<PosCoords> {
-        let q_pos = self.get_queen_positions();
-        let q_moves = q_pos
-            .iter()
-            .map(|&p| self.get_queen_moves(p))
-            .fold(HashSet::new(), |result, curr| {
-                result.union(&curr).cloned().collect()
-            });
         let all_spaces = self.squares
             .iter()
             .enumerate()
             .map(|(i, _)| self.get_index_pos(i))
             .collect::<HashSet<PosCoords>>();
-        all_spaces.difference(&q_moves).cloned().collect()
+        let contested_spaces = self.get_queen_positions()
+            .iter()
+            .map(|&p| self.get_queen_moves(p))
+            .fold(HashSet::new(), |result, curr| {
+                result.union(&curr).cloned().collect()
+            });
+        all_spaces.difference(&contested_spaces).cloned().collect()
     }
 }
 
