@@ -19,7 +19,14 @@ impl Queens for Board {
     }
 
     fn get_queen_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+        // let (pos_x, pos_y) = pos;
         unimplemented!();
+    }
+}
+
+impl Board {
+    fn get_upward_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+        (pos.1..self.height).map(|y| (pos.0, y)).collect()
     }
 }
 
@@ -41,5 +48,25 @@ mod board_queens_tests {
         let expected: HashSet<PosCoords> =
             [(0, 0), (0, 7), (7, 0), (7, 7)].iter().cloned().collect();
         assert_eq!(queen_positions, expected);
+    }
+
+    #[test]
+    fn get_upward_moves_works_from_origin() {
+        let mut b = Board::new();
+        let pos = (0, 0);
+        let expected = [
+            (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7)
+        ].iter().cloned().collect();
+        let result = b.get_upward_moves(pos);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn get_upward_moves_returns_curr_pos_from_top_row() {
+        let mut b = Board::new();
+        let pos = (0, 7);
+        let expected = [(0, 7)].iter().cloned().collect();
+        let result = b.get_upward_moves(pos);
+        assert_eq!(result, expected);
     }
 }
