@@ -51,6 +51,11 @@ impl Board {
     fn get_e_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         (pos.0..self.width).map(|x| (x, pos.1)).collect()
     }
+
+    fn get_nw_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+        let dis_to_edge = ::std::cmp::min(pos.0 + 1, self.height - pos.1);
+        (0..dis_to_edge).map(|delta| (pos.0 - delta, pos.1 + delta)).collect()
+    }
 }
 
 #[cfg(test)]
@@ -90,6 +95,33 @@ mod board_queens_tests {
             .cloned()
             .collect();
         let result = b.get_n_moves(pos);
+        assert_eq!(result, expected);
+    }
+
+    ///   01234567
+    ///   --------
+    /// 7|        |
+    /// 6|        |
+    /// 5|        |
+    /// 4|        |
+    /// 3|x       |
+    /// 2| x      |
+    /// 1|  x     |
+    /// 0|   Q    |
+    ///   --------
+    #[test]
+    fn get_nw_moves_works_from_3_0() {
+        let mut b = Board::new();
+        let pos = (3, 0);
+        let expected = [
+            (3, 0),
+            (2, 1),
+            (1, 2),
+            (0, 3),
+        ].iter()
+            .cloned()
+            .collect();
+        let result = b.get_nw_moves(pos);
         assert_eq!(result, expected);
     }
 
