@@ -20,6 +20,8 @@ impl Queens for Board {
             .collect::<HashSet<PosCoords>>()
     }
 
+    // Get the coordinates of the possible moves that a queen can
+    // potential make. This identifies the squares a queen is contesting.
     fn get_queen_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         let moves = [
             &self.get_n_moves(pos),
@@ -82,7 +84,7 @@ mod board_queens_tests {
     use super::Board;
     use position_types::*;
     use std::collections::HashSet;
-    use {Queens, Square};
+    use Queens;
 
     #[test]
     fn add_queen_works() {
@@ -99,7 +101,7 @@ mod board_queens_tests {
 
     #[test]
     fn get_n_moves_works_from_origin() {
-        let mut b = Board::new();
+        let b = Board::new();
         let pos = (0, 0);
         let expected = [
             (0, 0),
@@ -130,7 +132,7 @@ mod board_queens_tests {
     ///   --------
     #[test]
     fn get_nw_moves_works_from_3_0() {
-        let mut b = Board::new();
+        let b = Board::new();
         let pos = (3, 0);
         let expected = [
             (3, 0),
@@ -146,7 +148,7 @@ mod board_queens_tests {
 
     #[test]
     fn get_n_moves_returns_curr_pos_from_top_row() {
-        let mut b = Board::new();
+        let b = Board::new();
         let pos = (0, 7);
         let expected = [(0, 7)].iter().cloned().collect();
         let result = b.get_n_moves(pos);
