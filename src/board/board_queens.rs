@@ -19,14 +19,35 @@ impl Queens for Board {
     }
 
     fn get_queen_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
-        // let (pos_x, pos_y) = pos;
-        unimplemented!();
+        let moves = [
+            &self.get_n_moves(pos),
+            &self.get_s_moves(pos),
+            &self.get_w_moves(pos),
+            &self.get_e_moves(pos),
+        ];
+        moves.iter()
+            .fold(HashSet::new(),
+                |res, dir| res.union(dir).cloned().collect())
     }
 }
 
+// This block stores helper functions for finding the moves in a given
+// direction. These functions each return a hash set of coordinates.
 impl Board {
-    fn get_upward_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+    fn get_n_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         (pos.1..self.height).map(|y| (pos.0, y)).collect()
+    }
+
+    fn get_s_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+        (0..pos.1+1).map(|y| (pos.0, y)).collect()
+    }
+
+    fn get_w_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+        (0..pos.0+1).map(|x| (x, pos.1)).collect()
+    }
+
+    fn get_e_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+        (pos.0..self.width).map(|x| (x, pos.1)).collect()
     }
 }
 
@@ -51,22 +72,22 @@ mod board_queens_tests {
     }
 
     #[test]
-    fn get_upward_moves_works_from_origin() {
+    fn get_n_moves_works_from_origin() {
         let mut b = Board::new();
         let pos = (0, 0);
         let expected = [
             (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7)
         ].iter().cloned().collect();
-        let result = b.get_upward_moves(pos);
+        let result = b.get_n_moves(pos);
         assert_eq!(result, expected);
     }
 
     #[test]
-    fn get_upward_moves_returns_curr_pos_from_top_row() {
+    fn get_n_moves_returns_curr_pos_from_top_row() {
         let mut b = Board::new();
         let pos = (0, 7);
         let expected = [(0, 7)].iter().cloned().collect();
-        let result = b.get_upward_moves(pos);
+        let result = b.get_n_moves(pos);
         assert_eq!(result, expected);
     }
 }
