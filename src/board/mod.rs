@@ -1,7 +1,4 @@
-mod square;
-pub use self::square::Square;
-
-pub type Position = (u32, u32);
+use {Position, Square};
 
 #[derive(Debug)]
 pub struct Board {
