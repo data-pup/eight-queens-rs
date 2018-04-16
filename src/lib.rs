@@ -1,6 +1,7 @@
 use std::collections::HashSet;
 
 pub mod board;
+pub mod solver;
 
 pub type PosIndex = usize;
 /// Position coordinates. Note: These are in (x, y) format.
