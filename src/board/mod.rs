@@ -1,9 +1,9 @@
-use Square;
 use position_types::*;
+use Square;
 
 mod board_queens;
-mod board_uncontested_spaces;
 mod board_to_string;
+mod board_uncontested_spaces;
 
 #[derive(Debug)]
 pub struct Board {
@@ -16,9 +16,7 @@ impl Board {
     pub fn new() -> Board {
         let width = 8;
         let height = 8;
-        let squares = (0..width * height)
-            .map(|_| Square::Empty)
-            .collect();
+        let squares = (0..width * height).map(|_| Square::Empty).collect();
         Board {
             width,
             height,
@@ -53,8 +51,8 @@ impl Board {
 
 #[cfg(test)]
 mod board_tests {
-    use position_types::*;
     use super::Board;
+    use position_types::*;
 
     #[test]
     fn dimensions_are_correct() {
@@ -68,8 +66,9 @@ mod board_tests {
         let b = Board::new();
         for PosTestCase {
             coords: (col, row),
-            i: expected
-        } in POS_TEST_CASES.iter() {
+            i: expected,
+        } in POS_TEST_CASES.iter()
+        {
             let result = b.get_pos_index(*row, *col);
             assert_eq!(result, *expected);
         }
@@ -81,7 +80,8 @@ mod board_tests {
         for PosTestCase {
             coords: expected,
             i: pos,
-        } in POS_TEST_CASES.iter() {
+        } in POS_TEST_CASES.iter()
+        {
             let result = b.get_index_pos(*pos);
             assert_eq!(result, *expected);
         }

@@ -1,7 +1,7 @@
-use std::collections::HashSet;
-use {Square, Queens};
-use position_types::*;
 use super::Board;
+use position_types::*;
+use std::collections::HashSet;
+use {Queens, Square};
 
 impl Queens for Board {
     /// Add a queen to the board at the given position.
@@ -12,7 +12,9 @@ impl Queens for Board {
 
     /// Get the positions of the queens.
     fn get_queen_positions(&self) -> HashSet<PosCoords> {
-        self.squares.iter().enumerate()
+        self.squares
+            .iter()
+            .enumerate()
             .filter(|(_, &s)| s == Square::Queen)
             .map(|(i, _)| self.get_index_pos(i))
             .collect::<HashSet<PosCoords>>()
@@ -25,9 +27,9 @@ impl Queens for Board {
             &self.get_w_moves(pos),
             &self.get_e_moves(pos),
         ];
-        moves.iter()
-            .fold(HashSet::new(),
-                |res, dir| res.union(dir).cloned().collect())
+        moves
+            .iter()
+            .fold(HashSet::new(), |res, dir| res.union(dir).cloned().collect())
     }
 }
 
@@ -39,11 +41,11 @@ impl Board {
     }
 
     fn get_s_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
-        (0..pos.1+1).map(|y| (pos.0, y)).collect()
+        (0..pos.1 + 1).map(|y| (pos.0, y)).collect()
     }
 
     fn get_w_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
-        (0..pos.0+1).map(|x| (x, pos.1)).collect()
+        (0..pos.0 + 1).map(|x| (x, pos.1)).collect()
     }
 
     fn get_e_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
@@ -53,10 +55,10 @@ impl Board {
 
 #[cfg(test)]
 mod board_queens_tests {
-    use std::collections::HashSet;
-    use {Square, Queens};
-    use position_types::*;
     use super::Board;
+    use position_types::*;
+    use std::collections::HashSet;
+    use {Queens, Square};
 
     #[test]
     fn add_queen_works() {
@@ -76,8 +78,17 @@ mod board_queens_tests {
         let mut b = Board::new();
         let pos = (0, 0);
         let expected = [
-            (0, 0), (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7)
-        ].iter().cloned().collect();
+            (0, 0),
+            (0, 1),
+            (0, 2),
+            (0, 3),
+            (0, 4),
+            (0, 5),
+            (0, 6),
+            (0, 7),
+        ].iter()
+            .cloned()
+            .collect();
         let result = b.get_n_moves(pos);
         assert_eq!(result, expected);
     }

@@ -1,8 +1,8 @@
 use std::collections::HashSet;
 
-use {Queens, UncontestedSpaces};
-use position_types::*;
 use super::Board;
+use position_types::*;
+use {Queens, UncontestedSpaces};
 
 impl UncontestedSpaces for Board {
     fn get_uncontested_spaces(&self) -> HashSet<PosCoords> {
@@ -10,9 +10,12 @@ impl UncontestedSpaces for Board {
         let q_moves = q_pos
             .iter()
             .map(|&p| self.get_queen_moves(p))
-            .fold(HashSet::new(),
-                |result, curr| result.union(&curr).cloned().collect());
-        let all_spaces = self.squares.iter().enumerate()
+            .fold(HashSet::new(), |result, curr| {
+                result.union(&curr).cloned().collect()
+            });
+        let all_spaces = self.squares
+            .iter()
+            .enumerate()
             .map(|(i, _)| self.get_index_pos(i))
             .collect::<HashSet<PosCoords>>();
         all_spaces.difference(&q_moves).cloned().collect()
@@ -21,10 +24,10 @@ impl UncontestedSpaces for Board {
 
 #[cfg(test)]
 mod board_uncontested_spaces_tests {
-    use std::collections::HashSet;
-    use {UncontestedSpaces, Queens};
-    use position_types::*;
     use super::Board;
+    use position_types::*;
+    use std::collections::HashSet;
+    use {Queens, UncontestedSpaces};
 
     /// This function tests uncontested spaces for the following state:
     /// NOTE: Q's are queens, x's are contested spaces.
@@ -47,13 +50,33 @@ mod board_uncontested_spaces_tests {
             b.add_queen(row, col);
         }
         let expected: HashSet<PosCoords> = [
-            (2, 6), (3, 6), (4, 6), (5, 6),
-            (1, 5), (3, 5), (4, 5), (6, 5),
-            (1, 4), (2, 4), (5, 4), (6, 4),
-            (1, 3), (2, 3), (5, 3), (6, 3),
-            (1, 2), (3, 2), (4, 2), (6, 2),
-            (2, 1), (3, 1), (4, 1), (5, 1),
-        ].iter().cloned().collect();
+            (2, 6),
+            (3, 6),
+            (4, 6),
+            (5, 6),
+            (1, 5),
+            (3, 5),
+            (4, 5),
+            (6, 5),
+            (1, 4),
+            (2, 4),
+            (5, 4),
+            (6, 4),
+            (1, 3),
+            (2, 3),
+            (5, 3),
+            (6, 3),
+            (1, 2),
+            (3, 2),
+            (4, 2),
+            (6, 2),
+            (2, 1),
+            (3, 1),
+            (4, 1),
+            (5, 1),
+        ].iter()
+            .cloned()
+            .collect();
         let results = b.get_uncontested_spaces();
         assert_eq!(results, expected);
     }

@@ -30,7 +30,7 @@ pub trait UncontestedSpaces {
 }
 
 mod position_types {
-    pub use PosIndex;
     pub use PosCoords;
     pub use PosError;
+    pub use PosIndex;
 }
