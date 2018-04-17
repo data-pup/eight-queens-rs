@@ -4,18 +4,22 @@ use {PosCoords, Queens, Solutions, UncontestedSpaces};
 
 /// This struct is used to find solutions to the problem, given a board state.
 pub struct Solver {
-    is_solved: bool,
-    all_queens_safe: bool,
+    pub is_solved: bool,
+    pub has_conflict: bool,
 }
 
 impl Solver {
     /// Create a new solver object.
     pub fn _new(_board: &Board) -> Solver {
-        let is_solved = Solver::check_is_solved(_board);
-        let all_queens_safe = Solver::has_no_contested_queens(_board);
-        Solver {
-            is_solved,
-            all_queens_safe,
+        match Solver::has_contested_queens(_board) {
+            true => Solver {
+                has_conflict: true,
+                is_solved: false,
+            },
+            false => Solver {
+                has_conflict: false,
+                is_solved: Solver::check_is_solved(_board),
+            },
         }
     }
 
@@ -35,13 +39,18 @@ impl Solver {
         unimplemented!(); // Fixup.
     }
 
-    fn has_no_contested_queens(b: &Board) -> bool {
+    /// This helper method will check whether the board has any contested
+    /// queens, that could move to one another's space.
+    fn has_contested_queens(b: &Board) -> bool {
         let q_positions = b.get_queen_positions();
         let uncontested = b.get_uncontested_spaces();
-        q_positions
-            .iter()
-            .map(|p| uncontested.contains(p))
-            .fold(true, |res, curr| res && curr)
+        match q_positions.is_empty() {
+            true => false,
+            false => q_positions
+                .iter()
+                .map(|p| uncontested.contains(p))
+                .fold(true, |result, is_uncontested| result && is_uncontested),
+        }
     }
 }
 
@@ -56,11 +65,15 @@ impl Solutions for Solver {
 
 #[cfg(test)]
 mod solver_tests {
-    use super::Board;
+    use super::Solver;
+    use Board;
 
     #[test]
-    fn default_board_is_not_a_solution() {
-        unimplemented!()
+    fn default_board_is_not_a_solution_has_no_conflict() {
+        let b = Board::new();
+        let s = Solver::_new(&b);
+        assert_eq!(s.has_conflict, false, "Empty board has no conflict.");
+        assert_eq!(s.is_solved, false);
     }
 
     #[test]
