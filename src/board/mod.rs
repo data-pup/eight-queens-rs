@@ -14,6 +14,7 @@ pub struct Board {
 }
 
 impl Board {
+    /// Create a new, empty, 8x8 chess board.
     pub fn new() -> Board {
         let width = 8;
         let height = 8;

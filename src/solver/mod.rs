@@ -31,7 +31,10 @@ impl Solver {
     }
 }
 
+/// Implement the Solutions trait for the solver class. This will return a set
+/// of solutions.
 impl Solutions for Solver {
+    /// Calculate solutions to the problem.
     fn get_solutions(&self) -> HashSet<PosCoords> {
         unimplemented!();
     }
