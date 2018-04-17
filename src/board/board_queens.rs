@@ -1,5 +1,6 @@
 use super::Board;
 use position_types::*;
+use std::cmp::min;
 use std::collections::HashSet;
 use {Queens, Square};
 
@@ -57,30 +58,30 @@ impl Board {
     }
 
     fn get_nw_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
-        let dis_to_edge = ::std::cmp::min(pos.0 + 1, self.height - pos.1);
+        let dis_to_edge = min(pos.0 + 1, self.height - pos.1);
         (0..dis_to_edge)
             .map(|delta| (pos.0 - delta, pos.1 + delta))
             .collect()
     }
 
     fn get_ne_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
-        let dis_to_edge = ::std::cmp::min(self.width - pos.0, self.height - pos.1);
+        let dis_to_edge = min(self.width - pos.0, self.height - pos.1);
         (0..dis_to_edge)
             .map(|delta| (pos.0 + delta, pos.1 + delta))
             .collect()
     }
 
     fn get_sw_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
-        let dis_to_edge = ::std::cmp::min(pos.0 + 1, pos.1 + 1);
+        let dis_to_edge = min(pos.0 + 1, pos.1 + 1);
         (0..dis_to_edge)
             .map(|delta| (pos.0 - delta, pos.1 - delta))
             .collect()
     }
 
     fn get_se_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
-        let dis_to_edge = ::std::cmp::min(self.width - pos.0, pos.1 + 1);
+        let dis_to_edge = min(self.width - pos.0, pos.1 + 1);
         (0..dis_to_edge)
-            .map(|delta| (pos.0 + delta, pos.1 + delta))
+            .map(|delta| (pos.0 + delta, pos.1 - delta))
             .collect()
     }
 }
@@ -103,6 +104,55 @@ mod board_queens_tests {
         let expected: HashSet<PosCoords> =
             [(0, 0), (0, 7), (7, 0), (7, 7)].iter().cloned().collect();
         assert_eq!(queen_positions, expected);
+    }
+
+    ///   01234567
+    ///   --------
+    /// 7|  x    x|
+    /// 6|  x   x |
+    /// 5|  x  x  |
+    /// 4|x x x   |
+    /// 3| xxx    |
+    /// 2|xxQxxxxx|
+    /// 1| xxx    |
+    /// 0|x x x   |
+    ///   --------
+    #[test]
+    fn get_queen_moves_works_from_2_2() {
+        let b = Board::new();
+        let pos = (2, 2);
+        let expected = [
+            (0, 0),
+            (2, 0),
+            (4, 0),
+            (1, 1),
+            (2, 1),
+            (3, 1),
+            (0, 2),
+            (1, 2),
+            (2, 2),
+            (3, 2),
+            (4, 2),
+            (5, 2),
+            (6, 2),
+            (7, 2),
+            (1, 3),
+            (2, 3),
+            (3, 3),
+            (0, 4),
+            (2, 4),
+            (4, 4),
+            (2, 5),
+            (5, 5),
+            (2, 6),
+            (6, 6),
+            (2, 7),
+            (7, 7),
+        ].iter()
+            .cloned()
+            .collect();
+        let result = b.get_queen_moves(pos);
+        assert_eq!(result, expected);
     }
 
     #[test]
@@ -141,6 +191,15 @@ mod board_queens_tests {
         let b = Board::new();
         let pos = (3, 0);
         let expected = [(3, 0), (2, 1), (1, 2), (0, 3)].iter().cloned().collect();
+        let result = b.get_nw_moves(pos);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn get_nw_moves_works_from_0_0() {
+        let b = Board::new();
+        let pos = (0, 0);
+        let expected = [(0, 0)].iter().cloned().collect();
         let result = b.get_nw_moves(pos);
         assert_eq!(result, expected);
     }
