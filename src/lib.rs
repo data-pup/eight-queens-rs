@@ -11,9 +11,7 @@ pub type PosCoords = (u32, u32);
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum PosError {
-    InvalidRow,
-    InvalidColumn,
-    InvalidIndex,
+    OutOfBounds,
 }
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]

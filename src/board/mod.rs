@@ -1,5 +1,5 @@
 use position_types::*;
-use Square;
+use {PosError, Square};
 
 mod board_from_pos_iter;
 mod board_queens;
@@ -36,9 +36,12 @@ impl Board {
     }
 
     /// Return the contents of a square.
-    pub fn get_square(&self, row: u32, col: u32) -> Square {
+    pub fn get_square(&self, row: u32, col: u32) -> Result<Square, PosError> {
         let i = self.get_pos_index(row, col);
-        self.squares[i]
+        match i < self.squares.len() {
+            true => Ok(self.squares[i]),
+            false => Err(PosError::OutOfBounds),
+        }
     }
 }
 
@@ -60,7 +63,7 @@ impl Board {
 mod board_tests {
     use super::Board;
     use position_types::*;
-    use {Square, Queens};
+    use {Queens, Square};
 
     /// Test that the dimensions of a default board are correct.
     #[test]
@@ -76,11 +79,21 @@ mod board_tests {
     fn get_square_works() {
         let mut b = Board::new();
         let (x, y) = (0, 0);
-        let mut s = b.get_square(0, 0);
-        assert_eq!(s, Square::Empty);
+        let mut s = b.get_square(x, y);
+        assert_eq!(s, Ok(Square::Empty));
         b.add_queen(x, y);
-        s = b.get_square(0, 0);
-        assert_eq!(s, Square::Queen);
+        s = b.get_square(x, y);
+        assert_eq!(s, Ok(Square::Queen));
+    }
+
+    /// Test that `get_square` will fail gracefully given a coordinate pair
+    /// that is out of bounds of the board.
+    #[test]
+    fn get_square_handles_oob_coords() {
+        let b = Board::new();
+        let (x, y) = (8, 8);
+        let s = b.get_square(x, y);
+        assert_eq!(s, Err(PosError::OutOfBounds));
     }
 
     /// Check that an index can be created using a position's coordinates.
