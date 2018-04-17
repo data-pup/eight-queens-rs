@@ -1,3 +1,5 @@
+#![feature(try_from)]
+
 use std::collections::HashSet;
 
 pub mod board;
