@@ -30,4 +30,11 @@ mod board_from_pos_iter_tests {
         assert_eq!(b.height, 8);
         assert_eq!(b.width, 8);
     }
+
+    #[test]
+    fn create_board_with_one_queen_at_origin() {
+        let b: Board = [(0, 0), (0, 1)].iter().cloned().collect();
+        let expected: HashSet<PosCoords> = [(0, 0), (0, 1)].iter().cloned().collect();
+        assert_eq!(b.get_queen_positions(), expected);
+    }
 }
