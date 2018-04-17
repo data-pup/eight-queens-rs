@@ -60,6 +60,7 @@ impl Board {
 mod board_tests {
     use super::Board;
     use position_types::*;
+    use {Square, Queens};
 
     /// Test that the dimensions of a default board are correct.
     #[test]
@@ -67,6 +68,19 @@ mod board_tests {
         let b = Board::new();
         assert_eq!(b.width(), 8);
         assert_eq!(b.height(), 8);
+    }
+
+    /// Check that the `get_square` method works, and returns a Square::Queen
+    /// after adding a queen to that square.
+    #[test]
+    fn get_square_works() {
+        let mut b = Board::new();
+        let (x, y) = (0, 0);
+        let mut s = b.get_square(0, 0);
+        assert_eq!(s, Square::Empty);
+        b.add_queen(x, y);
+        s = b.get_square(0, 0);
+        assert_eq!(s, Square::Queen);
     }
 
     /// Check that an index can be created using a position's coordinates.
