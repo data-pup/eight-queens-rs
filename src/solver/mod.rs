@@ -40,3 +40,21 @@ impl Solutions for Solver {
         unimplemented!();
     }
 }
+
+#[cfg(test)]
+mod solver_tests {
+    #[test]
+    fn default_board_is_not_a_solution() {
+        unimplemented!();
+    }
+
+    #[test]
+    fn invalid_solution_with_8_queens_is_not_accepted() {
+        unimplemented!();
+    }
+
+    #[test]
+    fn valid_solution_is_accepted() {
+        unimplemented!();
+    }
+}
