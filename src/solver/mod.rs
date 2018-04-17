@@ -1,5 +1,6 @@
 use board::Board;
-use {Queens, UncontestedSpaces};
+use std::collections::HashSet;
+use {PosCoords, Queens, Solutions, UncontestedSpaces};
 
 pub struct Solver {
     board: Board,
@@ -24,6 +25,12 @@ impl Solver {
             unimplemented!(); // Check if any of the positions contain a queen.
         }
 
+        unimplemented!();
+    }
+}
+
+impl Solutions for Solver {
+    fn get_solutions(&self) -> HashSet<PosCoords> {
         unimplemented!();
     }
 }

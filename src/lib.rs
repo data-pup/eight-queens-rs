@@ -30,6 +30,10 @@ pub trait UncontestedSpaces {
     fn get_uncontested_spaces(&self) -> HashSet<PosCoords>;
 }
 
+pub trait Solutions {
+    fn get_solutions(&self) -> HashSet<PosCoords>;
+}
+
 mod position_types {
     pub use PosCoords;
     pub use PosError;
