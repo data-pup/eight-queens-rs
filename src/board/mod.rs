@@ -61,6 +61,7 @@ mod board_tests {
     use super::Board;
     use position_types::*;
 
+    /// Test that the dimensions of a default board are correct.
     #[test]
     fn dimensions_are_correct() {
         let b = Board::new();
@@ -68,6 +69,7 @@ mod board_tests {
         assert_eq!(b.height(), 8);
     }
 
+    /// Check that an index can be created using a position's coordinates.
     #[test]
     fn get_pos_index_works() {
         let b = Board::new();
@@ -81,6 +83,7 @@ mod board_tests {
         }
     }
 
+    /// Check that a coordinate pair can be created using a position's index.
     #[test]
     fn get_index_pos_works() {
         let b = Board::new();
@@ -94,11 +97,15 @@ mod board_tests {
         }
     }
 
+    /// Helper struct used to test the `get_pos_index` and `get_index_pos`
+    /// helper functions. Each struct should contain corresponding index
+    /// coordinate pairs.
     struct PosTestCase {
         coords: PosCoords,
         i: PosIndex,
     }
 
+    /// Test cases.
     static POS_TEST_CASES: &[PosTestCase] = &[
         PosTestCase {
             coords: (0, 0),
