@@ -2,6 +2,7 @@ use board::Board;
 use std::collections::HashSet;
 use {PosCoords, Queens, Solutions};
 
+/// This struct is used to find solutions to the problem, given a board state.
 pub struct Solver {
     _board: Board,
     _is_solved: bool,
