@@ -8,10 +8,12 @@ pub struct Solver {
 }
 
 impl Solver {
-    fn _new(_board: Board) {
+    /// Create a new solver object.
+    fn _new(_board: Board) -> Solver {
         unimplemented!();
     }
 
+    /// Check if the board is currently a solution to the 8 queens problem.
     fn _check_is_solved(b: &Board) -> bool {
         let q_positions = b.get_queen_positions();
         if q_positions.len() < 8 {
@@ -25,7 +27,7 @@ impl Solver {
             unimplemented!(); // Check if any of the positions contain a queen.
         }
 
-        unimplemented!();
+        unimplemented!(); // Fixup.
     }
 }
 
