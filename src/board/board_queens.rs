@@ -41,22 +41,28 @@ impl Queens for Board {
 // This block stores helper functions for finding the moves in a given
 // direction. These functions each return a hash set of coordinates.
 impl Board {
+    /// This function will return a set of the possible upward moves.
     fn get_n_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         (pos.1..self.height).map(|y| (pos.0, y)).collect()
     }
 
+    /// This function will return a set of the possible downward moves.
     fn get_s_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         (0..pos.1 + 1).map(|y| (pos.0, y)).collect()
     }
 
+    /// This function will return a set of the possible leftward moves.
     fn get_w_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         (0..pos.0 + 1).map(|x| (x, pos.1)).collect()
     }
 
+    /// This function will return a set of the possible rightward moves.
     fn get_e_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         (pos.0..self.width).map(|x| (x, pos.1)).collect()
     }
 
+    /// This function will return a set of the possible diagonal moves
+    /// going up and to the left.
     fn get_nw_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         let dis_to_edge = min(pos.0 + 1, self.height - pos.1);
         (0..dis_to_edge)
@@ -64,6 +70,8 @@ impl Board {
             .collect()
     }
 
+    /// This function will return a set of the possible diagonal moves
+    /// going up and to the right.
     fn get_ne_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         let dis_to_edge = min(self.width - pos.0, self.height - pos.1);
         (0..dis_to_edge)
@@ -71,6 +79,8 @@ impl Board {
             .collect()
     }
 
+    /// This function will return a set of the possible diagonal moves
+    /// going down and to the left.
     fn get_sw_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         let dis_to_edge = min(pos.0 + 1, pos.1 + 1);
         (0..dis_to_edge)
@@ -78,6 +88,8 @@ impl Board {
             .collect()
     }
 
+    /// This function will return a set of the possible diagonal moves
+    /// going down and to the right.
     fn get_se_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         let dis_to_edge = min(self.width - pos.0, pos.1 + 1);
         (0..dis_to_edge)
