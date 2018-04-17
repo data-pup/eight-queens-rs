@@ -1,18 +1,18 @@
 use board::Board;
 use std::collections::HashSet;
-use {PosCoords, Queens, Solutions, UncontestedSpaces};
+use {PosCoords, Queens, Solutions};
 
 pub struct Solver {
-    board: Board,
-    is_solved: bool,
+    _board: Board,
+    _is_solved: bool,
 }
 
 impl Solver {
-    fn new(b: Board) {
+    fn _new(_board: Board) {
         unimplemented!();
     }
 
-    fn check_is_solved(b: &Board) -> bool {
+    fn _check_is_solved(b: &Board) -> bool {
         let q_positions = b.get_queen_positions();
         if q_positions.len() < 8 {
             return false;
@@ -21,7 +21,7 @@ impl Solver {
         }
 
         for &curr_pos in q_positions.iter() {
-            let moves = b.get_queen_moves(curr_pos);
+            let _moves = b.get_queen_moves(curr_pos);
             unimplemented!(); // Check if any of the positions contain a queen.
         }
 

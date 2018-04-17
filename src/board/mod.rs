@@ -34,6 +34,12 @@ impl Board {
     pub fn height(&self) -> u32 {
         self.height
     }
+
+    /// Return the contents of a square.
+    pub fn get_square(&self, row: u32, col: u32) -> Square {
+        let i = self.get_pos_index(row, col);
+        self.squares[i]
+    }
 }
 
 impl Board {
