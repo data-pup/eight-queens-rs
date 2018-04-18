@@ -6,9 +6,7 @@ use self::board_has_conflict::has_contested_queens;
 use self::get_queen_states::get_queen_states;
 use self::queen_state::QueenState;
 
-use std::collections::HashSet;
-
-use {Board, PosCoords, Queens};
+use Board;
 
 /// Represents a given solution state.
 #[derive(Debug, PartialEq)]
