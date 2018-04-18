@@ -13,29 +13,30 @@ use Board;
 pub struct SolutionState {
     pub is_solved: bool,
     pub has_conflict: bool,
-    // pub num_queens: u8,
+    pub num_queens: u8,
     // pub uncontested: HashSet<PosCoords>,
 }
 
 impl From<Board> for SolutionState {
     fn from(b: Board) -> SolutionState {
         let queen_states = get_queen_states(&b);
+        let num_queens = queen_states.len() as u8;
         if has_contested_queens(&queen_states) {
             SolutionState {
                 has_conflict: true,
                 is_solved: false,
+                num_queens,
             }
         } else {
-            match queen_states.len() {
-                l if l < 8 => SolutionState {
-                    has_conflict: false,
-                    is_solved: false,
-                },
-                l if l == 8 => SolutionState {
-                    has_conflict: false,
-                    is_solved: true,
-                },
-                _ => panic!("More than eight queens were found."),
+            let is_solved = match num_queens {
+                n if n < 8 => false,
+                n if n == 8 => true,
+                _ => panic!("More than eight queens on board"),
+            };
+            SolutionState {
+                has_conflict: false,
+                is_solved,
+                num_queens,
             }
         }
     }
