@@ -7,14 +7,14 @@ use {PosCoords, Solutions};
 
 /// This struct is used to find solutions to the problem, given a board state.
 pub struct Solver {
-    soln_state: SolutionState,
+    _soln_state: SolutionState,
 }
 
 impl Solver {
     /// Create a new solver object.
     pub fn _new(b: Board) -> Solver {
         Solver {
-            soln_state: SolutionState::from(b),
+            _soln_state: SolutionState::from(b),
         }
     }
 }
