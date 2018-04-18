@@ -1,10 +1,13 @@
 mod board_has_conflict;
 mod board_is_solved;
+
 use self::board_has_conflict::has_contested_queens;
 use self::board_is_solved::check_is_solved;
+
 use std::collections::HashSet;
 use std::convert::From;
-use {Board, PosCoords, Queens, UncontestedSpaces};
+
+use {Board, PosCoords, Queens};
 
 /// Represents a given solution state.
 #[derive(Debug, PartialEq)]

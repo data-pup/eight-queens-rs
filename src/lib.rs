@@ -31,11 +31,6 @@ pub trait Queens {
     fn add_queen(&mut self, row: u32, col: u32);
     fn get_queen_positions(&self) -> HashSet<PosCoords>;
     fn get_queen_moves(&self, pos: PosCoords) -> HashSet<PosCoords>;
-}
-
-/// This trait specifies methods related to finding the uncontested spaces
-/// on the board.
-pub trait UncontestedSpaces {
     fn get_uncontested_spaces(&self) -> HashSet<PosCoords>;
 }
 

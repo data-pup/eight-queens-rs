@@ -4,7 +4,6 @@ use {PosError, Square};
 mod board_from_pos_iter;
 mod board_queens;
 mod board_to_string;
-mod board_uncontested_spaces;
 
 #[derive(Debug)]
 pub struct Board {
