@@ -5,7 +5,6 @@ use self::board_has_conflict::has_contested_queens;
 use self::board_is_solved::check_is_solved;
 
 use std::collections::HashSet;
-use std::convert::From;
 
 use {Board, PosCoords, Queens};
 
@@ -20,9 +19,10 @@ pub struct SolutionState {
 
 impl From<Board> for SolutionState {
     fn from(b: Board) -> SolutionState {
-        let num_queens = b.get_queen_positions().len() as u8;
+        let queen_positions = b.get_queen_positions();
+        let num_queens = queen_positions.len() as u8;
         let uncontested = b.get_uncontested_spaces();
-        match has_contested_queens(&b) {
+        match has_contested_queens(&queen_positions, &uncontested) {
             true => SolutionState {
                 has_conflict: true,
                 is_solved: false,
