@@ -114,7 +114,9 @@ mod solution_state_tests {
             (6, 5),
             (5, 6),
             (5, 7),
-        ].iter().cloned().collect();
+        ].iter()
+            .cloned()
+            .collect();
         let sol = SolutionState::from(b);
         assert_eq!(sol.has_conflict, true);
         assert_eq!(sol.is_solved, false);
@@ -142,7 +144,9 @@ mod solution_state_tests {
             (6, 5),
             (3, 6),
             (5, 7),
-        ].iter().cloned().collect();
+        ].iter()
+            .cloned()
+            .collect();
         let sol = SolutionState::from(b);
         assert_eq!(sol.has_conflict, false);
         assert_eq!(sol.is_solved, true);
