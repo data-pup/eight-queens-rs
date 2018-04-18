@@ -92,13 +92,59 @@ mod solution_state_tests {
         assert_eq!(sol.is_solved, false);
     }
 
+    ///   01234567
+    ///   --------
+    /// 7|     Q  |
+    /// 6|     Q  |
+    /// 5|      Q |
+    /// 4|Q       |
+    /// 3|       Q|
+    /// 2| Q      |
+    /// 1|    Q   |
+    /// 0|  Q     |
+    ///   --------
     #[test]
     fn invalid_solution_with_8_queens_is_not_accepted() {
-        unimplemented!();
+        let b: Board = [
+            (2, 0),
+            (4, 1),
+            (1, 2),
+            (7, 3),
+            (0, 4),
+            (6, 5),
+            (5, 6),
+            (5, 7),
+        ].iter().cloned().collect();
+        let sol = SolutionState::from(b);
+        assert_eq!(sol.has_conflict, true);
+        assert_eq!(sol.is_solved, false);
     }
 
+    ///   01234567
+    ///   --------
+    /// 7|     Q  |
+    /// 6|   Q    |
+    /// 5|      Q |
+    /// 4|Q       |
+    /// 3|       Q|
+    /// 2| Q      |
+    /// 1|    Q   |
+    /// 0|  Q     |
+    ///   --------
     #[test]
     fn valid_solution_is_accepted() {
-        unimplemented!();
+        let b: Board = [
+            (2, 0),
+            (4, 1),
+            (1, 2),
+            (7, 3),
+            (0, 4),
+            (6, 5),
+            (3, 6),
+            (5, 7),
+        ].iter().cloned().collect();
+        let sol = SolutionState::from(b);
+        assert_eq!(sol.has_conflict, false);
+        assert_eq!(sol.is_solved, true);
     }
 }
