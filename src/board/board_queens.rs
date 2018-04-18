@@ -21,8 +21,8 @@ impl Queens for Board {
             .collect::<HashSet<PosCoords>>()
     }
 
-    // Get the coordinates of the possible moves that a queen can
-    // potential make. This identifies the squares a queen is contesting.
+    /// Get the coordinates of the possible moves that a queen can
+    /// potential make. This identifies the squares a queen is contesting.
     fn get_queen_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         [
             &self.get_n_moves(pos),
@@ -37,6 +37,8 @@ impl Queens for Board {
             .fold(HashSet::new(), |res, dir| res.union(dir).cloned().collect())
     }
 
+    /// Get a set of the uncontested spaces on the board. This identifies the
+    /// positions at which a new queen can be added to the board.
     fn get_uncontested_spaces(&self) -> HashSet<PosCoords> {
         let all_spaces = self.squares
             .iter()
