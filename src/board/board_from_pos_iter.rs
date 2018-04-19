@@ -38,3 +38,26 @@ mod board_from_pos_iter_tests {
         assert_eq!(b.get_queen_positions(), expected);
     }
 }
+
+#[cfg(test)]
+mod board_from_pos_iter_benches {
+    #![feature(test)]
+    extern crate test;
+    use self::test::{Bencher, black_box};
+    use std::iter::empty;
+    use super::Board;
+
+    #[bench]
+    fn time_create_board_from_empty_iter(bencher: &mut Bencher) {
+        bencher.iter(|| {
+            let _: Board = empty().into_iter().collect();
+        });
+    }
+
+    #[bench]
+    fn time_creating_board_with_two_queens_from_iter(bencher: &mut Bencher) {
+        bencher.iter(|| {
+            let _: Board = [(0, 0), (0, 1)].iter().cloned().collect();
+        });
+    }
+}
