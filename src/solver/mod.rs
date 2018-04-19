@@ -7,15 +7,26 @@ use {PosCoords, Solutions};
 
 /// This struct is used to find solutions to the problem, given a board state.
 pub struct Solver {
+    _curr_board: Board,
     _soln_state: SolutionState,
+    _next_moves: Vec<SolutionState>,
 }
 
 impl Solver {
     /// Create a new solver object.
     pub fn _new(b: Board) -> Solver {
         Solver {
+            _curr_board: b.clone(),
             _soln_state: SolutionState::from(b),
+            _next_moves: vec![],
         }
+    }
+
+    /// Create a vector of the next possible moves.
+    /// TODO: Return in descending order sorted by number of remaining
+    /// uncontested squares on the board?
+    fn _get_next_moves(_b: &Board) -> Vec<Board> {
+        unimplemented!();
     }
 }
 

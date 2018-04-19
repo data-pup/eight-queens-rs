@@ -5,7 +5,7 @@ mod board_from_pos_iter;
 mod board_queens;
 mod board_to_string;
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 pub struct Board {
     width: u32,
     height: u32,
