@@ -3,13 +3,12 @@ use self::solution_state::SolutionState;
 
 use board::Board;
 use std::collections::HashSet;
-use {PosCoords, Solutions};
+use {Queens, PosCoords, Solutions};
 
 /// This struct is used to find solutions to the problem, given a board state.
 pub struct Solver {
     _curr_board: Board,
     _soln_state: SolutionState,
-    _next_moves: Vec<SolutionState>,
 }
 
 impl Solver {
@@ -18,15 +17,22 @@ impl Solver {
         Solver {
             _curr_board: b.clone(),
             _soln_state: SolutionState::from(b),
-            _next_moves: vec![],
         }
     }
 
     /// Create a vector of the next possible moves.
     /// TODO: Return in descending order sorted by number of remaining
     /// uncontested squares on the board?
-    fn _get_next_moves(_b: &Board) -> Vec<Board> {
-        unimplemented!();
+    fn _get_next_moves(b: &Board) -> Vec<Solver> {
+        let uncontested = b.get_uncontested_spaces();
+        uncontested.iter()
+            .map(|&(col, row)| {
+                let mut next_state = b.clone();
+                next_state.add_queen(row, col);
+                next_state
+            })
+            .map(Solver::_new)
+            .collect::<Vec<Solver>>()
     }
 }
 
