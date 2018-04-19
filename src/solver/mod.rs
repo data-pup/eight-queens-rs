@@ -24,7 +24,8 @@ impl Solver {
     /// TODO: Return in descending order sorted by number of remaining
     /// uncontested squares on the board?
     fn _get_next_moves(&self) -> Vec<Solver> {
-        self._curr_board.get_uncontested_spaces()
+        self._curr_board
+            .get_uncontested_spaces()
             .iter()
             .map(|&(col, row)| {
                 let mut next_state = self._curr_board.clone();

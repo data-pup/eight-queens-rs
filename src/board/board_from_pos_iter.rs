@@ -44,10 +44,10 @@ mod board_from_pos_iter_benches {
     extern crate rand;
     extern crate test;
     use self::test::Bencher;
-    use std::iter::empty;
     use super::Board;
-    use PosCoords;
     use rand::Rng;
+    use std::iter::empty;
+    use PosCoords;
 
     #[bench]
     fn time_create_board_from_empty_iter(bencher: &mut Bencher) {
@@ -77,11 +77,12 @@ mod board_from_pos_iter_benches {
         let mut rng = rand::thread_rng();
         rng.shuffle(&mut x_coords);
         rng.shuffle(&mut y_coords);
-        (0..8).map(|i| {
-            let row = y_coords[i];
-            let col = x_coords[i];
-            (col, row)
-        })
-        .collect()
+        (0..8)
+            .map(|i| {
+                let row = y_coords[i];
+                let col = x_coords[i];
+                (col, row)
+            })
+            .collect()
     }
 }
