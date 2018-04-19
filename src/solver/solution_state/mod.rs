@@ -16,6 +16,7 @@ pub struct SolutionState {
     pub num_queens: u8,
 }
 
+/// Create a SolutionState object using a Board state.
 impl From<Board> for SolutionState {
     fn from(b: Board) -> SolutionState {
         let queen_states = get_queen_states(&b);

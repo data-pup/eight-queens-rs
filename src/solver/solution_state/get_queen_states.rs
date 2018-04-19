@@ -1,6 +1,8 @@
 use super::QueenState;
 use Queens;
 
+/// This function will create a vector of each queen's current position,
+/// along with a set of the moves that queen could make.
 pub fn get_queen_states(queens: &Queens) -> Vec<QueenState> {
     queens
         .get_queen_positions()
