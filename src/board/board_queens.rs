@@ -294,3 +294,25 @@ mod board_queens_tests {
         assert_eq!(results, expected);
     }
 }
+
+#[cfg(test)]
+mod get_queen_moves_benches {
+    extern crate rand;
+    extern crate test;
+    use rand::Rng;
+    use self::test::Bencher;
+    use Queens;
+    use super::Board;
+
+    #[bench]
+    fn get_queen_moves(bencher: &mut Bencher) {
+        let mut rng = rand::thread_rng();
+        let x = rng.gen_range::<u32>(0, 8);
+        let y = rng.gen_range::<u32>(0, 8);
+        let pos = (x, y);
+        let b = Board::new();
+        bencher.iter(|| {
+            let _ = b.get_queen_moves(pos);
+        });
+    }
+}
