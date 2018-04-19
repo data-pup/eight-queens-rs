@@ -33,6 +33,7 @@ impl Solver {
                 next_state
             })
             .map(Solver::_new)
+            .filter(|s| !s._soln_state.has_conflict)
             .collect::<Vec<Solver>>()
     }
 }
