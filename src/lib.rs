@@ -1,4 +1,4 @@
-#![feature(try_from)]
+#![feature(test, try_from)]
 
 use std::collections::HashSet;
 

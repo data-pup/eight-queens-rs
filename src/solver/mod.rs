@@ -3,7 +3,7 @@ use self::solution_state::SolutionState;
 
 use board::Board;
 use std::collections::HashSet;
-use {Queens, PosCoords, Solutions};
+use {PosCoords, Queens, Solutions};
 
 /// This struct is used to find solutions to the problem, given a board state.
 pub struct Solver {
@@ -23,11 +23,11 @@ impl Solver {
     /// Create a vector of the next possible moves.
     /// TODO: Return in descending order sorted by number of remaining
     /// uncontested squares on the board?
-    fn _get_next_moves(b: &Board) -> Vec<Solver> {
-        let uncontested = b.get_uncontested_spaces();
-        uncontested.iter()
+    fn _get_next_moves(&self) -> Vec<Solver> {
+        self._curr_board.get_uncontested_spaces()
+            .iter()
             .map(|&(col, row)| {
-                let mut next_state = b.clone();
+                let mut next_state = self._curr_board.clone();
                 next_state.add_queen(row, col);
                 next_state
             })
@@ -42,5 +42,23 @@ impl Solutions for Solver {
     /// Calculate solutions to the problem.
     fn get_solutions(&self) -> HashSet<PosCoords> {
         unimplemented!();
+    }
+}
+
+#[cfg(test)]
+mod get_next_moves_bench {
+    #![feature(test)]
+    extern crate test;
+    use self::test::{Bencher, black_box};
+    use super::Solver;
+    use Board;
+
+    #[bench]
+    fn time_get_next_moves_for_empty_board(bencher: &mut Bencher) {
+        let b = Board::new();
+        let s = Solver::_new(b);
+        bencher.iter(|| {
+            let _ = s._get_next_moves();
+        });
     }
 }
