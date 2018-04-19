@@ -299,10 +299,10 @@ mod board_queens_tests {
 mod get_queen_moves_benches {
     extern crate rand;
     extern crate test;
-    use rand::Rng;
     use self::test::Bencher;
-    use {PosCoords, Queens};
     use super::Board;
+    use rand::Rng;
+    use {PosCoords, Queens};
 
     #[bench]
     fn get_queen_moves(bencher: &mut Bencher) {
@@ -317,18 +317,45 @@ mod get_queen_moves_benches {
     }
 
     #[bench]
+    fn get_uncontested_spaces_with_empty_board_bench(bencher: &mut Bencher) {
+        let board: Board = get_n_random_coords(2).into_iter().collect();
+        bencher.iter(|| {
+            let _ = board.get_uncontested_spaces();
+        });
+    }
+
+    #[bench]
+    fn get_uncontested_spaces_with_two_queens_bench(bencher: &mut Bencher) {
+        let board: Board = get_n_random_coords(2).into_iter().collect();
+        bencher.iter(|| {
+            let _ = board.get_uncontested_spaces();
+        });
+    }
+
+    #[bench]
     fn get_uncontested_spaces_with_four_queens_bench(bencher: &mut Bencher) {
+        let board: Board = get_n_random_coords(4).into_iter().collect();
+        bencher.iter(|| {
+            let _ = board.get_uncontested_spaces();
+        });
+    }
+
+    #[bench]
+    fn get_uncontested_spaces_with_seven_queens_bench(bencher: &mut Bencher) {
+        let board: Board = get_n_random_coords(7).into_iter().collect();
+        bencher.iter(|| {
+            let _ = board.get_uncontested_spaces();
+        });
+    }
+
+    fn get_n_random_coords(n: usize) -> Vec<PosCoords> {
         let mut rng = rand::thread_rng();
         let mut y_range = (0..8).collect::<Vec<u32>>();
         let mut x_range = (0..8).collect::<Vec<u32>>();
         rng.shuffle(&mut x_range);
         rng.shuffle(&mut y_range);
-        let x_coords: Vec<u32> = x_range.into_iter().take(4).collect();
-        let y_coords: Vec<u32> = y_range.into_iter().take(4).collect();
-        let coords: Vec<PosCoords> = (0..4).map(|i| (x_coords[i], y_coords[i])).collect();
-        let board: Board = coords.into_iter().collect();
-        bencher.iter(|| {
-            let _ = board.get_uncontested_spaces();
-        });
+        let x_coords: Vec<u32> = x_range.into_iter().take(n).collect();
+        let y_coords: Vec<u32> = y_range.into_iter().take(n).collect();
+        (0..n).map(|i| (x_coords[i], y_coords[i])).collect()
     }
 }
