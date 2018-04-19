@@ -1,5 +1,7 @@
 #![feature(test, try_from)]
 
+extern crate rand;
+
 use std::collections::HashSet;
 
 pub mod board;
