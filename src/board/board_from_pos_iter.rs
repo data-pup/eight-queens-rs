@@ -41,10 +41,9 @@ mod board_from_pos_iter_tests {
 
 #[cfg(test)]
 mod board_from_pos_iter_benches {
-    #![feature(test)]
     extern crate rand;
     extern crate test;
-    use self::test::{Bencher, black_box};
+    use self::test::Bencher;
     use std::iter::empty;
     use super::Board;
     use PosCoords;

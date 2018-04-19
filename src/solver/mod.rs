@@ -47,9 +47,8 @@ impl Solutions for Solver {
 
 #[cfg(test)]
 mod get_next_moves_bench {
-    #![feature(test)]
     extern crate test;
-    use self::test::{Bencher, black_box};
+    use self::test::Bencher;
     use super::Solver;
     use Board;
 
