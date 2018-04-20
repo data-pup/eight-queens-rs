@@ -9,7 +9,7 @@ use self::queen_state::QueenState;
 use Board;
 
 /// Represents a given solution state.
-#[derive(Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq)]
 pub struct SolutionState {
     pub is_solved: bool,
     pub has_conflict: bool,

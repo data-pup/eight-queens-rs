@@ -13,6 +13,8 @@ pub use board::Board;
 pub type PosIndex = usize;
 /// Position coordinates. Note: These are in (x, y) format.
 pub type PosCoords = (u32, u32);
+// A set of position coordinates representing the current queen positions.
+pub type CoordSet = HashSet<PosCoords>;
 
 /// Position errors. Thrown if a coordinate access attempt is out of bounds.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -47,7 +49,7 @@ pub trait Rotation {
 /// Solutions trait, this specifies the method to be called to calculate
 /// solutions to the problem, and return them as a set.
 pub trait Solutions {
-    fn get_solutions(&self) -> HashSet<PosCoords>;
+    fn get_solutions(&self) -> Option<Vec<CoordSet>>;
 }
 
 /// Module used to import the different position types, and the error enum

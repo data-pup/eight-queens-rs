@@ -2,10 +2,10 @@ mod solution_state;
 use self::solution_state::SolutionState;
 
 use board::Board;
-use std::collections::HashSet;
-use {PosCoords, Queens, Solutions};
+use {CoordSet, Queens, Solutions};
 
 /// This struct is used to find solutions to the problem, given a board state.
+#[derive(Clone, Debug)]
 pub struct Solver {
     _curr_board: Board,
     _soln_state: SolutionState,
@@ -42,8 +42,19 @@ impl Solver {
 /// of solutions.
 impl Solutions for Solver {
     /// Calculate solutions to the problem.
-    fn get_solutions(&self) -> HashSet<PosCoords> {
-        unimplemented!();
+    fn get_solutions(&self) -> Option<Vec<CoordSet>> {
+        if self._soln_state.has_conflict {
+            None
+        } else if self._soln_state.is_solved {
+            let soln = vec![self._curr_board.get_queen_positions()];
+            Some(soln)
+        } else {
+            let _ = self._get_next_moves().iter()
+                .filter_map(|next_move| next_move.get_solutions())
+                .flatten()
+                .collect::<Vec<CoordSet>>();
+            unimplemented!();
+        }
     }
 }
 
