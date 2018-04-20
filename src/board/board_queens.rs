@@ -2,7 +2,7 @@ use super::Board;
 use position_types::*;
 use std::cmp::min;
 use std::collections::HashSet;
-use {Queens, Square};
+use {CoordSet, Queens, Square};
 
 impl Queens for Board {
     /// Add a queen to the board at the given position.
@@ -12,18 +12,18 @@ impl Queens for Board {
     }
 
     /// Get the positions of the queens.
-    fn get_queen_positions(&self) -> HashSet<PosCoords> {
+    fn get_queen_positions(&self) -> CoordSet {
         self.squares
             .iter()
             .enumerate()
             .filter(|(_, &s)| s == Square::Queen)
             .map(|(i, _)| self.get_index_pos(i))
-            .collect::<HashSet<PosCoords>>()
+            .collect::<CoordSet>()
     }
 
     /// Get the coordinates of the possible moves that a queen can
     /// potential make. This identifies the squares a queen is contesting.
-    fn get_queen_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+    fn get_queen_moves(&self, pos: PosCoords) -> CoordSet {
         [
             self.get_vert_moves(pos),
             self.get_horiz_moves(pos),
@@ -39,7 +39,7 @@ impl Queens for Board {
 
     /// Get a set of the uncontested spaces on the board. This identifies the
     /// positions at which a new queen can be added to the board.
-    fn get_uncontested_spaces(&self) -> HashSet<PosCoords> {
+    fn get_uncontested_spaces(&self) -> CoordSet {
         let all_spaces = self.squares
             .iter()
             .enumerate()

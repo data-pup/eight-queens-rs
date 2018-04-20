@@ -119,21 +119,14 @@ mod get_next_moves_bench {
 #[cfg(test)]
 mod get_solutions_tests {
     use super::Solver;
-    use {CoordSet, Board, Solutions};
+    use {Board, CoordSet, Solutions};
 
     /// Time the `get_solutions` method, starting at a position with 7 queens
     /// on the board. One queen placed at (5, 7) will solve the problem.
     #[test]
     fn test_correct_solution_is_found_for_7_queen_pos() {
-        let b: Board = [
-            (2, 0),
-            (4, 1),
-            (1, 2),
-            (7, 3),
-            (0, 4),
-            (6, 5),
-            (3, 6),
-        ].iter()
+        let b: Board = [(2, 0), (4, 1), (1, 2), (7, 3), (0, 4), (6, 5), (3, 6)]
+            .iter()
             .cloned()
             .collect();
         let solver = Solver::new(b);
@@ -148,7 +141,9 @@ mod get_solutions_tests {
                 (6, 5),
                 (3, 6),
                 (5, 7),
-            ].iter().cloned().collect()
+            ].iter()
+                .cloned()
+                .collect(),
         ];
         assert_eq!(soln_set, expected_soln_coords);
     }
@@ -177,15 +172,8 @@ mod get_solutions_benches {
     ///   --------
     #[bench]
     fn time_get_solution_from_7_queen_pos(bencher: &mut Bencher) {
-        let b: Board = [
-            (2, 0),
-            (4, 1),
-            (1, 2),
-            (7, 3),
-            (0, 4),
-            (6, 5),
-            (3, 6),
-        ].iter()
+        let b: Board = [(2, 0), (4, 1), (1, 2), (7, 3), (0, 4), (6, 5), (3, 6)]
+            .iter()
             .cloned()
             .collect();
         let solver = Solver::new(b);
@@ -211,13 +199,8 @@ mod get_solutions_benches {
     ///   --------
     #[bench]
     fn time_get_solution_from_5_queen_pos(bencher: &mut Bencher) {
-        let b: Board = [
-            (2, 0),
-            (4, 1),
-            (1, 2),
-            (7, 3),
-            (0, 4),
-        ].iter()
+        let b: Board = [(2, 0), (4, 1), (1, 2), (7, 3), (0, 4)]
+            .iter()
             .cloned()
             .collect();
         let solver = Solver::new(b);
@@ -228,25 +211,19 @@ mod get_solutions_benches {
 
     #[bench]
     fn time_get_solution_from_3_queen_pos(bencher: &mut Bencher) {
-        let b: Board = [
-            (2, 0),
-            (4, 1),
-            (1, 2),
-        ].iter()
-            .cloned()
-            .collect();
+        let b: Board = [(2, 0), (4, 1), (1, 2)].iter().cloned().collect();
         let solver = Solver::new(b);
         bencher.iter(|| {
             solver.get_solutions();
         });
     }
 
-    #[bench]
-    fn time_get_solution_from_empty_board(bencher: &mut Bencher) {
-        let b: Board = Board::new();
-        let solver = Solver::new(b);
-        bencher.iter(|| {
-            solver.get_solutions();
-        });
-    }
+    // #[bench]
+    // fn time_get_solution_from_empty_board(bencher: &mut Bencher) {
+    //     let b: Board = Board::new();
+    //     let solver = Solver::new(b);
+    //     bencher.iter(|| {
+    //         solver.get_solutions();
+    //     });
+    // }
 }
