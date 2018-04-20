@@ -33,11 +33,12 @@ pub enum Square {
 /// positions, and finding their possible moves on the board.
 pub trait Queens {
     fn add_queen(&mut self, row: u32, col: u32);
-    fn get_queen_positions(&self) -> HashSet<PosCoords>;
-    fn get_queen_moves(&self, pos: PosCoords) -> HashSet<PosCoords>;
-    fn get_uncontested_spaces(&self) -> HashSet<PosCoords>;
+    fn get_queen_positions(&self) -> CoordSet;
+    fn get_queen_moves(&self, pos: PosCoords) -> CoordSet;
+    fn get_uncontested_spaces(&self) -> CoordSet;
 }
 
+/// TODO: Implement rotations.
 pub trait Rotation {
     fn get_rotate_90_deg_clockwise(&self) -> Board;
     fn get_rotate_90_deg_counter_clockwise(&self) -> Board;
