@@ -25,16 +25,16 @@ impl Queens for Board {
     /// potential make. This identifies the squares a queen is contesting.
     fn get_queen_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
         [
-            &self.get_n_moves(pos),
-            &self.get_s_moves(pos),
-            &self.get_w_moves(pos),
-            &self.get_e_moves(pos),
-            &self.get_nw_moves(pos),
-            &self.get_ne_moves(pos),
-            &self.get_sw_moves(pos),
-            &self.get_se_moves(pos),
+            self.get_vert_moves(pos),
+            self.get_horiz_moves(pos),
+            self.get_nw_moves(pos),
+            self.get_ne_moves(pos),
+            self.get_sw_moves(pos),
+            self.get_se_moves(pos),
         ].iter()
-            .fold(HashSet::new(), |res, dir| res.union(dir).cloned().collect())
+            .flatten()
+            .cloned()
+            .collect()
     }
 
     /// Get a set of the uncontested spaces on the board. This identifies the
@@ -58,29 +58,21 @@ impl Queens for Board {
 // This block stores helper functions for finding the moves in a given
 // direction. These functions each return a hash set of coordinates.
 impl Board {
-    /// This function will return a set of the possible upward moves.
-    fn get_n_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
-        (pos.1..self.height).map(|y| (pos.0, y)).collect()
+    /// This function will return a vector of the vertical moves a queen at
+    /// a given position `pos` can make.
+    fn get_vert_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
+        (0..self.height).map(|y| (pos.0, y)).collect()
     }
 
-    /// This function will return a set of the possible downward moves.
-    fn get_s_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
-        (0..pos.1 + 1).map(|y| (pos.0, y)).collect()
-    }
-
-    /// This function will return a set of the possible leftward moves.
-    fn get_w_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
-        (0..pos.0 + 1).map(|x| (x, pos.1)).collect()
-    }
-
-    /// This function will return a set of the possible rightward moves.
-    fn get_e_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
-        (pos.0..self.width).map(|x| (x, pos.1)).collect()
+    /// This function will return a vector of the horizontal moves a queen at
+    /// a given position `pos` can make.
+    fn get_horiz_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
+        (0..self.width).map(|x| (x, pos.1)).collect()
     }
 
     /// This function will return a set of the possible diagonal moves
     /// going up and to the left.
-    fn get_nw_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+    fn get_nw_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
         let dis_to_edge = min(pos.0 + 1, self.height - pos.1);
         (0..dis_to_edge)
             .map(|delta| (pos.0 - delta, pos.1 + delta))
@@ -89,7 +81,7 @@ impl Board {
 
     /// This function will return a set of the possible diagonal moves
     /// going up and to the right.
-    fn get_ne_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+    fn get_ne_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
         let dis_to_edge = min(self.width - pos.0, self.height - pos.1);
         (0..dis_to_edge)
             .map(|delta| (pos.0 + delta, pos.1 + delta))
@@ -98,7 +90,7 @@ impl Board {
 
     /// This function will return a set of the possible diagonal moves
     /// going down and to the left.
-    fn get_sw_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+    fn get_sw_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
         let dis_to_edge = min(pos.0 + 1, pos.1 + 1);
         (0..dis_to_edge)
             .map(|delta| (pos.0 - delta, pos.1 - delta))
@@ -107,7 +99,7 @@ impl Board {
 
     /// This function will return a set of the possible diagonal moves
     /// going down and to the right.
-    fn get_se_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+    fn get_se_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
         let dis_to_edge = min(self.width - pos.0, pos.1 + 1);
         (0..dis_to_edge)
             .map(|delta| (pos.0 + delta, pos.1 - delta))
@@ -226,7 +218,12 @@ mod board_queens_tests {
             .cloned()
             .collect();
         let result = b.get_queen_moves(pos);
-        assert_eq!(result, expected, "Difference: {:?}", expected.difference(&result));
+        assert_eq!(
+            result,
+            expected,
+            "Difference: {:?}",
+            expected.difference(&result)
+        );
     }
 
     /// This function tests uncontested spaces for the following state:
@@ -290,30 +287,6 @@ mod get_queen_moves_benches {
     use super::Board;
     use rand::Rng;
     use Queens;
-
-    #[bench]
-    fn get_queen_n_moves(bencher: &mut Bencher) {
-        let mut rng = rand::thread_rng();
-        let x = rng.gen_range::<u32>(0, 8);
-        let y = rng.gen_range::<u32>(0, 8);
-        let pos = (x, y);
-        let b = Board::new();
-        bencher.iter(|| {
-            let _ = b.get_n_moves(pos);
-        });
-    }
-
-    #[bench]
-    fn get_queen_ne_moves(bencher: &mut Bencher) {
-        let mut rng = rand::thread_rng();
-        let x = rng.gen_range::<u32>(0, 8);
-        let y = rng.gen_range::<u32>(0, 8);
-        let pos = (x, y);
-        let b = Board::new();
-        bencher.iter(|| {
-            let _ = b.get_ne_moves(pos);
-        });
-    }
 
     #[bench]
     fn get_queen_moves(bencher: &mut Bencher) {

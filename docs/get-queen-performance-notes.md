@@ -11,7 +11,7 @@ spaces was one of the slowest functions, as an extension of the fact that
 the logic for finding an individual queen's possible moves was somewhat
 expensive as well.
 
-## Before
+## Original Implementation
 
 Let's start by looking at the original logic behind calculating a queen's
 available moves. This looked like this:
@@ -108,3 +108,62 @@ helper functions so that each returned a `Vec<PosCoords>` object, and collected
 a single `HashSet` object after using `flat_map`? This would hopefully remove
 the need to repeatedly clone and collect the `HashSet` that
 `get_queen_moves` returns.
+
+## Faster Implementation
+
+To reduce the number of times that data needs to be cloned, I first started by
+adjusting each of the helper functions so that they would return `Vec` objects,
+and combined some of the simple up/down/left/right functions. The logic remained
+mostly identical here, and most of the work related to refactoring test benches.
+
+```rust
+fn get_vert_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
+    (0..self.height).map(|y| (pos.0, y)).collect()
+}
+
+fn get_ne_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
+    let dis_to_edge = min(self.width - pos.0, self.height - pos.1);
+    (0..dis_to_edge)
+        .map(|delta| (pos.0 + delta, pos.1 + delta))
+        .collect()
+}
+```
+
+Once this was complete, I needed to rework the `get_queen_moves` function.
+
+```rust
+fn get_queen_moves(&self, pos: PosCoords) -> HashSet<PosCoords> {
+    [
+        self.get_vert_moves(pos),
+        self.get_horiz_moves(pos),
+        self.get_nw_moves(pos),
+        self.get_ne_moves(pos),
+        self.get_sw_moves(pos),
+        self.get_se_moves(pos),
+    ].iter()
+        .flatten()
+        .cloned()
+        .collect()
+```
+
+This uses an experimental nightly feature, `flatten`. The first step is
+creating a vector of vectors, each containing the available coordinates in
+a given direction. Each of these vectors is flattened into a single vector.
+We clone the elements in this resulting vector of coordinate references, and
+collect them into a single hash set object.
+
+After this was done, I ran my benchmarks once more, and found that the times
+had improved considerably, as shown below:
+
+```
+test get_queen_moves ... bench: 1,578 ns/iter (+/- 52)
+test get_uncontested_spaces_with_empty_board_bench ... bench: 7,560 ns/iter (+/- 226)
+test get_uncontested_spaces_with_four_queens_bench ... bench: 25,173 ns/iter (+/- 479)
+test get_uncontested_spaces_with_seven_queens_bench ... bench: 41,674 ns/iter (+/- 1,250)
+test get_uncontested_spaces_with_two_queens_bench ... bench: 14,765 ns/iter (+/- 280)
+```
+
+The `get_queen_moves` function now ran in 15% of the time! This was also much
+closer to what I considered to be the ideal runtime of the function. Further,
+this also dramatically improved the runtime of the function used to identify
+uncontested spaces on the board, taking less than half of the original time.

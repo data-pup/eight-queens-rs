@@ -1,4 +1,4 @@
-#![feature(test, try_from)]
+#![feature(iterator_flatten, test, try_from)]
 
 extern crate rand;
 
