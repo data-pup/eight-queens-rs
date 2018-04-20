@@ -43,8 +43,6 @@ pub trait Rotation {
     fn get_rotate_90_deg_clockwise(&self) -> Board;
     fn get_rotate_90_deg_counter_clockwise(&self) -> Board;
     fn get_rotate_180_deg(&self) -> Board;
-    fn get_horizontal_flip(&self) -> Board;
-    fn get_vertical_flip(&self) -> Board;
 }
 
 /// Solutions trait, this specifies the method to be called to calculate
