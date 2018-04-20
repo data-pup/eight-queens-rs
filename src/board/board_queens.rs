@@ -305,6 +305,30 @@ mod get_queen_moves_benches {
     use {PosCoords, Queens};
 
     #[bench]
+    fn get_queen_n_moves(bencher: &mut Bencher) {
+        let mut rng = rand::thread_rng();
+        let x = rng.gen_range::<u32>(0, 8);
+        let y = rng.gen_range::<u32>(0, 8);
+        let pos = (x, y);
+        let b = Board::new();
+        bencher.iter(|| {
+            let _ = b.get_n_moves(pos);
+        });
+    }
+
+    #[bench]
+    fn get_queen_ne_moves(bencher: &mut Bencher) {
+        let mut rng = rand::thread_rng();
+        let x = rng.gen_range::<u32>(0, 8);
+        let y = rng.gen_range::<u32>(0, 8);
+        let pos = (x, y);
+        let b = Board::new();
+        bencher.iter(|| {
+            let _ = b.get_ne_moves(pos);
+        });
+    }
+
+    #[bench]
     fn get_queen_moves(bencher: &mut Bencher) {
         let mut rng = rand::thread_rng();
         let x = rng.gen_range::<u32>(0, 8);
