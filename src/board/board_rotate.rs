@@ -24,8 +24,8 @@ impl Board {
     fn rotate_coord_90_deg_clockwise(&self, pos: &PosCoords) -> PosCoords {
         let &(orig_x, orig_y) = pos;
         (
+            orig_y,
             (self.height - 1) - orig_x,
-            (self.width - 1) - orig_y,
         )
     }
 }
