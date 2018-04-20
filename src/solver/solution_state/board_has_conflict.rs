@@ -11,9 +11,9 @@ pub fn has_contested_queens(queen_states: &[QueenState]) -> bool {
             let other_queens_moves: HashSet<PosCoords> = queen_states
                 .iter()
                 .filter(|q| curr_queen.pos != q.pos)
-                .fold(HashSet::new(), |res, curr| {
-                    res.union(&curr.moves).cloned().collect()
-                });
+                .map(|q| q.moves.clone())
+                .flatten()
+                .collect();
             other_queens_moves.contains(&curr_queen.pos)
         })
         .fold(false, |any_contested, curr_is_contested| {
