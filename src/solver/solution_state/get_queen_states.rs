@@ -18,10 +18,10 @@ pub fn get_queen_states(queens: &Queens) -> Vec<QueenState> {
 mod get_queen_states_benches {
     extern crate rand;
     extern crate test;
-    use rand::Rng;
     use self::test::Bencher;
-    use {Board, PosCoords};
     use super::get_queen_states;
+    use rand::Rng;
+    use {Board, PosCoords};
 
     #[bench]
     fn get_queen_states_empty_board(bencher: &mut Bencher) {

@@ -1,7 +1,6 @@
 use {Board, Rotation};
 
 impl Rotation for Board {
-
     fn get_rotate_90_deg_clockwise(&self) -> Board {
         unimplemented!();
     }

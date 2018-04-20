@@ -184,62 +184,49 @@ mod board_queens_tests {
         assert_eq!(result, expected);
     }
 
+    ///   01234567
+    ///   --------
+    /// 7|xxxxxxxQ|
+    /// 6|      xx|
+    /// 5|     x x|
+    /// 4|    x  x|
+    /// 3|   x   x|
+    /// 2|  x    x|
+    /// 1| x     x|
+    /// 0|x      x|
+    ///   --------
     #[test]
-    fn get_n_moves_works_from_origin() {
+    fn get_queen_moves_works_from_7_7() {
         let b = Board::new();
-        let pos = (0, 0);
+        let pos = (7, 7);
         let expected = [
             (0, 0),
-            (0, 1),
-            (0, 2),
-            (0, 3),
-            (0, 4),
-            (0, 5),
-            (0, 6),
+            (1, 1),
+            (2, 2),
+            (3, 3),
+            (4, 4),
+            (5, 5),
+            (6, 6),
+            (7, 0),
+            (7, 1),
+            (7, 2),
+            (7, 3),
+            (7, 4),
+            (7, 5),
+            (7, 6),
             (0, 7),
+            (1, 7),
+            (2, 7),
+            (3, 7),
+            (4, 7),
+            (5, 7),
+            (6, 7),
+            (7, 7),
         ].iter()
             .cloned()
             .collect();
-        let result = b.get_n_moves(pos);
-        assert_eq!(result, expected);
-    }
-
-    ///   01234567
-    ///   --------
-    /// 7|        |
-    /// 6|        |
-    /// 5|        |
-    /// 4|        |
-    /// 3|x       |
-    /// 2| x      |
-    /// 1|  x     |
-    /// 0|   Q    |
-    ///   --------
-    #[test]
-    fn get_nw_moves_works_from_3_0() {
-        let b = Board::new();
-        let pos = (3, 0);
-        let expected = [(3, 0), (2, 1), (1, 2), (0, 3)].iter().cloned().collect();
-        let result = b.get_nw_moves(pos);
-        assert_eq!(result, expected);
-    }
-
-    #[test]
-    fn get_nw_moves_works_from_0_0() {
-        let b = Board::new();
-        let pos = (0, 0);
-        let expected = [(0, 0)].iter().cloned().collect();
-        let result = b.get_nw_moves(pos);
-        assert_eq!(result, expected);
-    }
-
-    #[test]
-    fn get_n_moves_returns_curr_pos_from_top_row() {
-        let b = Board::new();
-        let pos = (0, 7);
-        let expected = [(0, 7)].iter().cloned().collect();
-        let result = b.get_n_moves(pos);
-        assert_eq!(result, expected);
+        let result = b.get_queen_moves(pos);
+        assert_eq!(result, expected, "Difference: {:?}", expected.difference(&result));
     }
 
     /// This function tests uncontested spaces for the following state:
@@ -256,7 +243,7 @@ mod board_queens_tests {
     /// 0|QxxxxxxQ|
     ///   --------
     #[test]
-    fn queens_in_corners() {
+    fn get_uncontested_moves_works_for_queens_in_corners() {
         let mut b = Board::new();
         for curr in [(0, 0), (0, 7), (7, 0), (7, 7)].iter() {
             let &(col, row) = curr;

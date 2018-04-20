@@ -52,8 +52,8 @@ mod get_next_moves_bench {
     extern crate rand;
     extern crate test;
     use self::test::Bencher;
-    use rand::Rng;
     use super::Solver;
+    use rand::Rng;
     use {Board, PosCoords};
 
     #[bench]

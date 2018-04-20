@@ -22,6 +22,8 @@ impl Board {
     }
 
     fn _get_row_indices(&self, row: u32) -> Vec<usize> {
-        (0..self.width).map(|col| self.get_pos_index(row, col)).collect()
+        (0..self.width)
+            .map(|col| self.get_pos_index(row, col))
+            .collect()
     }
 }

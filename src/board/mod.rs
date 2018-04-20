@@ -3,8 +3,8 @@ use {PosError, Square};
 
 mod board_from_pos_iter;
 mod board_queens;
-mod board_to_string;
 mod board_rotate;
+mod board_to_string;
 
 #[derive(Clone, Debug)]
 pub struct Board {
