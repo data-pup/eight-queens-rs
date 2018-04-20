@@ -1,4 +1,4 @@
-use {Board, PosCoords, Queens, Rotation};
+use {Board, PosCoords, Rotation};
 
 impl Rotation for Board {
     /// Rotate the queens on the board 90 degrees clockwise.
