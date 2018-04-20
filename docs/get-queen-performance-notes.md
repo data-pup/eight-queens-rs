@@ -102,3 +102,9 @@ like this:
 
 At each iteration of the folding process, we must clone the elements in the
 resulting union of two hash sets, and place them in a new result object.
+
+Instead of this implementation, what if we refactored the navigation
+helper functions so that each returned a `Vec<PosCoords>` object, and collected
+a single `HashSet` object after using `flat_map`? This would hopefully remove
+the need to repeatedly clone and collect the `HashSet` that
+`get_queen_moves` returns.

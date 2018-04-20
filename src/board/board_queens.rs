@@ -302,7 +302,7 @@ mod get_queen_moves_benches {
     use self::test::Bencher;
     use super::Board;
     use rand::Rng;
-    use {PosCoords, Queens};
+    use Queens;
 
     #[bench]
     fn get_queen_n_moves(bencher: &mut Bencher) {
@@ -339,10 +339,20 @@ mod get_queen_moves_benches {
             let _ = b.get_queen_moves(pos);
         });
     }
+}
+
+#[cfg(test)]
+mod get_uncontested_spaces_benches {
+    extern crate rand;
+    extern crate test;
+    use self::test::Bencher;
+    use super::Board;
+    use rand::Rng;
+    use {PosCoords, Queens};
 
     #[bench]
     fn get_uncontested_spaces_with_empty_board_bench(bencher: &mut Bencher) {
-        let board: Board = get_n_random_coords(2).into_iter().collect();
+        let board: Board = Board::new();
         bencher.iter(|| {
             let _ = board.get_uncontested_spaces();
         });
