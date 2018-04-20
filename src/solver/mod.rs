@@ -49,11 +49,12 @@ impl Solutions for Solver {
             let soln = vec![self._curr_board.get_queen_positions()];
             Some(soln)
         } else {
-            let _ = self._get_next_moves().iter()
+            let solns = self._get_next_moves()
+                .iter()
                 .filter_map(|next_move| next_move.get_solutions())
                 .flatten()
                 .collect::<Vec<CoordSet>>();
-            unimplemented!();
+            Some(solns)
         }
     }
 }
