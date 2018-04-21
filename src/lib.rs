@@ -38,11 +38,11 @@ pub trait Queens {
     fn get_uncontested_spaces(&self) -> CoordSet;
 }
 
-/// TODO: Implement rotations.
-pub trait Rotation {
-    fn get_rotate_90_deg_clockwise(&self) -> Board;
-    fn get_rotate_90_deg_counter_clockwise(&self) -> Board;
-    fn get_rotate_180_deg(&self) -> Board;
+/// This trait is used to identify reflections of a given state.
+pub trait Reflection {
+    fn get_horizontal_reflection(&self) -> Board;
+    fn get_vertical_reflection(&self) -> Board;
+    fn get_inverse(&self) -> Board;
 }
 
 /// Solutions trait, this specifies the method to be called to calculate
