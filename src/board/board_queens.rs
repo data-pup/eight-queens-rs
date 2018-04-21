@@ -24,25 +24,22 @@ impl Queens for Board {
     /// Get a set of the uncontested spaces on the board. This identifies the
     /// positions at which a new queen can be added to the board.
     fn get_uncontested_spaces(&self) -> CoordSet {
-        let all_spaces = self.get_positions();
         let contested_spaces = self.get_queen_positions()
             .iter()
             .map(|&p| self.get_queen_moves(p))
             .fold(HashSet::new(), |result, curr| {
                 result.union(&curr).cloned().collect()
             });
-        all_spaces.difference(&contested_spaces).cloned().collect()
-    }
-}
-
-impl Board {
-    fn get_positions(&self) -> CoordSet {
-        (0..self.height)
-            .map(|y| {
-                (0..self.width).map(|x| (x, y))
-            })
-            .flatten()
-            .collect()
+        let mut uncontested = CoordSet::new();
+        for y in 0..self.height {
+            for x in 0..self.width {
+                let pos = (x, y);
+                if !contested_spaces.contains(&pos) {
+                    uncontested.insert(pos);
+                }
+            }
+        }
+        uncontested
     }
 }
 
