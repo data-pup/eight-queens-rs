@@ -2,25 +2,13 @@
 
 extern crate rand;
 
-use std::collections::HashSet;
-
 pub mod board;
+pub mod position;
 pub mod solver;
 
 pub use board::Board;
-
-/// Position index. Note: This may be made private?
-pub type PosIndex = usize;
-/// Position coordinates. Note: These are in (x, y) format.
-pub type PosCoords = (u32, u32);
-// A set of position coordinates representing the current queen positions.
-pub type CoordSet = HashSet<PosCoords>;
-
-/// Position errors. Thrown if a coordinate access attempt is out of bounds.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-pub enum PosError {
-    OutOfBounds,
-}
+pub use position::position_types;
+use position::position_types::*;
 
 /// Square type, this represent whether or not a square is occupied.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -51,10 +39,3 @@ pub trait Solutions {
     fn get_solutions(&self) -> Option<Vec<CoordSet>>;
 }
 
-/// Module used to import the different position types, and the error enum
-/// that can be returned in the event of an invalid coordinate pair.
-mod position_types {
-    pub use PosCoords;
-    pub use PosError;
-    pub use PosIndex;
-}

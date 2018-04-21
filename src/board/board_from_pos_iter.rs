@@ -16,7 +16,6 @@ impl FromIterator<PosCoords> for Board {
 #[cfg(test)]
 mod board_from_pos_iter_tests {
     use super::Board;
-    use position_types::*;
     use std::iter::empty;
     use {CoordSet, Queens};
 
