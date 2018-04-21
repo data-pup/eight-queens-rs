@@ -38,10 +38,6 @@ If we start at (0, 7) and rotate the board 90 degrees clockwise, we will now
 be at (7, 7). If we do this once more, we will find ourselves at (7, 0).
 
 How should we generalize this? Let's refer to the original coordinates as
-`(a, b)`, and the rotated coordinates as `(c, d)`. We will refer to the
-height and width of the board as `h` and `w` respectively.
-
-```
-c = (h - 1) - a
-d = (w - 1) - b
-```
+`(orig_x, orig_y)`, and the rotated coordinates as `(new_x, new_y)`. We will
+refer to the height and width of the board as `h` and `w` respectively.
+Given these, we can find (new_x, new_y) using:
