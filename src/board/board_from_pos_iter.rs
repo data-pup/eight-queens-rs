@@ -16,7 +16,7 @@ impl FromIterator<PosCoords> for Board {
 mod board_from_pos_iter_tests {
     use super::Board;
     use std::iter::empty;
-    use {CoordSet, Queens};
+    use CoordSet;
 
     #[test]
     fn create_board_from_empty_iter() {

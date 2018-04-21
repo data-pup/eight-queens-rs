@@ -79,7 +79,7 @@ impl Board {
 mod board_tests {
     use super::Board;
     use position_types::*;
-    use {Queens, Square};
+    use Square;
 
     /// Test that the dimensions of a default board are correct.
     #[test]
@@ -100,7 +100,7 @@ mod board_tests {
         let (x, y) = (0, 0);
         let mut s = b.get_square(x, y);
         assert_eq!(s, Ok(Square::Empty));
-        b.add_queen(x, y);
+        b.add_queen((x, y));
         s = b.get_square(x, y);
         assert_eq!(s, Ok(Square::Queen));
     }
@@ -114,36 +114,4 @@ mod board_tests {
         let s = b.get_square(x, y);
         assert_eq!(s, Err(PosError::OutOfBounds));
     }
-
-    /// Helper struct used to test the `get_pos_index` and `get_index_pos`
-    /// helper functions. Each struct should contain corresponding index
-    /// coordinate pairs.
-    struct PosTestCase {
-        coords: PosCoords,
-        i: PosIndex,
-    }
-
-    /// Test cases.
-    static POS_TEST_CASES: &[PosTestCase] = &[
-        PosTestCase {
-            coords: (0, 0),
-            i: 0_usize,
-        },
-        PosTestCase {
-            coords: (7, 0),
-            i: 7_usize,
-        },
-        PosTestCase {
-            coords: (0, 1),
-            i: 8_usize,
-        },
-        PosTestCase {
-            coords: (0, 7),
-            i: 56_usize,
-        },
-        PosTestCase {
-            coords: (7, 7),
-            i: 63_usize,
-        },
-    ];
 }

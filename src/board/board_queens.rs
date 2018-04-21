@@ -104,14 +104,10 @@ mod board_queens_tests {
 
     #[test]
     fn add_queen_works() {
-        let mut b = Board::new();
-        for curr in [(0, 0), (0, 7), (7, 0), (7, 7)].iter() {
-            let &(col, row) = curr;
-            b.add_queen(row, col);
-        }
-        let queen_positions = b.get_queen_positions();
-        let expected: HashSet<PosCoords> =
-            [(0, 0), (0, 7), (7, 0), (7, 7)].iter().cloned().collect();
+        let queen_positions: &[PosCoords] = &[(0, 0), (0, 7), (7, 0), (7, 7)];
+        let board = queen_positions.iter().cloned().collect::<Board>();
+        let queen_positions = board.get_queen_positions();
+        let expected = queen_positions.iter().cloned().collect::<CoordSet>();
         assert_eq!(queen_positions, expected);
     }
 
@@ -229,11 +225,8 @@ mod board_queens_tests {
     ///   --------
     #[test]
     fn get_uncontested_moves_works_for_queens_in_corners() {
-        let mut b = Board::new();
-        for curr in [(0, 0), (0, 7), (7, 0), (7, 7)].iter() {
-            let &(col, row) = curr;
-            b.add_queen(row, col);
-        }
+        let queen_positions: &[PosCoords] = &[(0, 0), (0, 7), (7, 0), (7, 7)];
+        let board = queen_positions.iter().cloned().collect::<Board>();
         let expected: HashSet<PosCoords> = [
             (2, 6),
             (3, 6),
@@ -262,7 +255,7 @@ mod board_queens_tests {
         ].iter()
             .cloned()
             .collect();
-        let results = b.get_uncontested_spaces();
+        let results = board.get_uncontested_spaces();
         assert_eq!(results, expected);
     }
 }

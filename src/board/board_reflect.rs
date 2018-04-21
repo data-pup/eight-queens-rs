@@ -46,7 +46,7 @@ impl Board {
 
 #[cfg(test)]
 mod pos_reflect_tests {
-    use {Board, PosCoords, Reflection};
+    use {Board, PosCoords};
 
     struct RotateTestCase {
         input: PosCoords,
