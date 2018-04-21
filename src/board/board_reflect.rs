@@ -1,4 +1,4 @@
-use {Board, PosCoords, Queens, Reflection};
+use {Board, PosCoords, Reflection};
 
 impl Reflection for Board {
     fn get_horizontal_reflection(&self) -> Board {

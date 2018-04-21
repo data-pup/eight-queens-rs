@@ -10,7 +10,7 @@ mod board_to_string;
 pub struct Board {
     width: u32,
     height: u32,
-    squares: Vec<Square>,
+    queens: CoordSet,
 }
 
 impl Board {
@@ -18,11 +18,11 @@ impl Board {
     pub fn new() -> Board {
         let width = 8;
         let height = 8;
-        let squares = (0..width * height).map(|_| Square::Empty).collect();
+        let queens = CoordSet::new();
         Board {
             width,
             height,
-            squares,
+            queens,
         }
     }
 
@@ -36,27 +36,42 @@ impl Board {
         self.height
     }
 
-    /// Return the contents of a square.
+    /// Return a pair of coordinates representing the dimensions of the board.
+    pub fn dims(&self) -> PosCoords {
+        (self.width, self.height)
+    }
+
+    /// Return a bool representing whether or not a position is in bounds.
+    pub fn in_bounds(&self, pos: &PosCoords) -> bool {
+        pos.0 < self.width && pos.1 < self.height
+    }
+
+    /// Return the contents of a square. Returns an error if the position is
+    /// not within the bounds of the board.
     pub fn get_square(&self, row: u32, col: u32) -> Result<Square, PosError> {
-        let i = self.get_pos_index(row, col);
-        match i < self.squares.len() {
-            true => Ok(self.squares[i]),
-            false => Err(PosError::OutOfBounds),
+        let pos = (col, row);
+        if !self.in_bounds(&pos) {
+            return Err(PosError::OutOfBounds);
+        } else {
+            match self.queens.contains(&pos) {
+                true => Ok(Square::Queen),
+                false => Ok(Square::Empty),
+            }
         }
     }
-}
 
-impl Board {
-    /// Find the index for a given position's coordinates.
-    fn get_pos_index(&self, row: u32, col: u32) -> usize {
-        (row * self.width + col) as usize
+    /// Add a queen to the board at the given position.
+    pub fn add_queen(&mut self, pos: PosCoords) {
+        if self.in_bounds(&pos) {
+            self.queens.insert(pos);
+        } else {
+            panic!("Cannot add queen at position {:?}", pos);
+        }
     }
 
-    /// Find the position coordinates for a given index.
-    fn get_index_pos(&self, pos: usize) -> PosCoords {
-        let y = pos as u32 / self.width;
-        let x = pos as u32 % self.width;
-        (x, y)
+    /// Get a clone of the hash set containing the queen's positions.
+    pub fn get_queen_positions(&self) -> CoordSet {
+        self.queens.clone()
     }
 }
 
@@ -72,6 +87,9 @@ mod board_tests {
         let b = Board::new();
         assert_eq!(b.width(), 8);
         assert_eq!(b.height(), 8);
+        let dims = b.dims();
+        let expected_dims = (8, 8);
+        assert_eq!(dims, expected_dims);
     }
 
     /// Check that the `get_square` method works, and returns a Square::Queen
@@ -95,34 +113,6 @@ mod board_tests {
         let (x, y) = (8, 8);
         let s = b.get_square(x, y);
         assert_eq!(s, Err(PosError::OutOfBounds));
-    }
-
-    /// Check that an index can be created using a position's coordinates.
-    #[test]
-    fn get_pos_index_works() {
-        let b = Board::new();
-        for PosTestCase {
-            coords: (col, row),
-            i: expected,
-        } in POS_TEST_CASES.iter()
-        {
-            let result = b.get_pos_index(*row, *col);
-            assert_eq!(result, *expected);
-        }
-    }
-
-    /// Check that a coordinate pair can be created using a position's index.
-    #[test]
-    fn get_index_pos_works() {
-        let b = Board::new();
-        for PosTestCase {
-            coords: expected,
-            i: pos,
-        } in POS_TEST_CASES.iter()
-        {
-            let result = b.get_index_pos(*pos);
-            assert_eq!(result, *expected);
-        }
     }
 
     /// Helper struct used to test the `get_pos_index` and `get_index_pos`

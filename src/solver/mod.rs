@@ -27,9 +27,9 @@ impl Solver {
         self._curr_board
             .get_uncontested_spaces()
             .iter()
-            .map(|&(col, row)| {
+            .map(|&pos| {
                 let mut next_state = self._curr_board.clone();
-                next_state.add_queen(row, col);
+                next_state.add_queen(pos);
                 next_state
             })
             .map(Solver::new)

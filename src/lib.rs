@@ -20,8 +20,8 @@ pub enum Square {
 /// This trait specifies methods related to adding queens, finding their
 /// positions, and finding their possible moves on the board.
 pub trait Queens {
-    fn add_queen(&mut self, row: u32, col: u32);
-    fn get_queen_positions(&self) -> CoordSet;
+    // fn add_queen(&mut self, row: u32, col: u32);
+    // fn get_queen_positions(&self) -> CoordSet;
     fn get_queen_moves(&self, pos: PosCoords) -> CoordSet;
     fn get_uncontested_spaces(&self) -> CoordSet;
 }
@@ -38,4 +38,3 @@ pub trait Reflection {
 pub trait Solutions {
     fn get_solutions(&self) -> Option<Vec<CoordSet>>;
 }
-

@@ -1,15 +1,14 @@
 use super::QueenState;
-use Queens;
+use {Board, Queens};
 
 /// This function will create a vector of each queen's current position,
 /// along with a set of the moves that queen could make.
-pub fn get_queen_states(queens: &Queens) -> Vec<QueenState> {
-    queens
-        .get_queen_positions()
+pub fn get_queen_states(board: &Board) -> Vec<QueenState> {
+    board.get_queen_positions()
         .iter()
         .map(|&pos| QueenState {
             pos: pos,
-            moves: queens.get_queen_moves(pos),
+            moves: board.get_queen_moves(pos),
         })
         .collect()
 }

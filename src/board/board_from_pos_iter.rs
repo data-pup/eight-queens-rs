@@ -1,13 +1,12 @@
 use super::Board;
 use position_types::*;
 use std::iter::FromIterator;
-use Queens;
 
 impl FromIterator<PosCoords> for Board {
     fn from_iter<I: IntoIterator<Item = PosCoords>>(positions: I) -> Board {
         let mut board = Board::new();
-        for (col, row) in positions {
-            board.add_queen(row, col);
+        for pos in positions {
+            board.add_queen(pos);
         }
         board
     }
