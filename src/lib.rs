@@ -4,6 +4,7 @@ extern crate rand;
 
 pub mod board;
 pub mod position;
+pub mod queen;
 pub mod solver;
 
 pub use board::Board;
