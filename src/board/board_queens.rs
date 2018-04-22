@@ -3,33 +3,15 @@ use position_types::*;
 use std::cmp::min;
 use std::collections::HashSet;
 use {CoordSet, Queens};
+use queen::get_contested_spaces;
 
 impl Queens for Board {
-    /// Get the coordinates of the possible moves that a queen can
-    /// potential make. This identifies the squares a queen is contesting.
-    fn get_queen_moves(&self, pos: PosCoords) -> CoordSet {
-        [
-            self.get_vert_moves(pos),
-            self.get_horiz_moves(pos),
-            self.get_nw_moves(pos),
-            self.get_ne_moves(pos),
-            self.get_sw_moves(pos),
-            self.get_se_moves(pos),
-        ].iter()
-            .flatten()
-            .cloned()
-            .collect()
-    }
-
     /// Get a set of the uncontested spaces on the board. This identifies the
     /// positions at which a new queen can be added to the board.
     fn get_uncontested_spaces(&self) -> CoordSet {
-        let contested_spaces = self.get_queen_positions()
-            .iter()
-            .map(|&p| self.get_queen_moves(p))
-            .fold(HashSet::new(), |result, curr| {
-                result.union(&curr).cloned().collect()
-            });
+        let contested_spaces = get_contested_spaces(
+            self.get_queen_positions(),
+            self.dims());
         let mut uncontested = CoordSet::new();
         for y in 0..self.height {
             for x in 0..self.width {
@@ -40,58 +22,6 @@ impl Queens for Board {
             }
         }
         uncontested
-    }
-}
-
-// This block stores helper functions for finding the moves in a given
-// direction. These functions each return a hash set of coordinates.
-impl Board {
-    /// This function will return a vector of the vertical moves a queen at
-    /// a given position `pos` can make.
-    fn get_vert_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
-        (0..self.height).map(|y| (pos.0, y)).collect()
-    }
-
-    /// This function will return a vector of the horizontal moves a queen at
-    /// a given position `pos` can make.
-    fn get_horiz_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
-        (0..self.width).map(|x| (x, pos.1)).collect()
-    }
-
-    /// This function will return a set of the possible diagonal moves
-    /// going up and to the left.
-    fn get_nw_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
-        let dis_to_edge = min(pos.0 + 1, self.height - pos.1);
-        (0..dis_to_edge)
-            .map(|delta| (pos.0 - delta, pos.1 + delta))
-            .collect()
-    }
-
-    /// This function will return a set of the possible diagonal moves
-    /// going up and to the right.
-    fn get_ne_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
-        let dis_to_edge = min(self.width - pos.0, self.height - pos.1);
-        (0..dis_to_edge)
-            .map(|delta| (pos.0 + delta, pos.1 + delta))
-            .collect()
-    }
-
-    /// This function will return a set of the possible diagonal moves
-    /// going down and to the left.
-    fn get_sw_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
-        let dis_to_edge = min(pos.0 + 1, pos.1 + 1);
-        (0..dis_to_edge)
-            .map(|delta| (pos.0 - delta, pos.1 - delta))
-            .collect()
-    }
-
-    /// This function will return a set of the possible diagonal moves
-    /// going down and to the right.
-    fn get_se_moves(&self, pos: PosCoords) -> Vec<PosCoords> {
-        let dis_to_edge = min(self.width - pos.0, pos.1 + 1);
-        (0..dis_to_edge)
-            .map(|delta| (pos.0 + delta, pos.1 - delta))
-            .collect()
     }
 }
 

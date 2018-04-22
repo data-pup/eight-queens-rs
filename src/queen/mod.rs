@@ -1,9 +1,15 @@
 use position_types::{CoordSet, PosCoords};
 use std::cmp::min;
 
+/// Return a set of all of the contested spaces on the board, given the
+/// positions of each queen, and the dimensions of the board.
+pub fn get_contested_spaces(queens: CoordSet, dims: PosCoords) -> CoordSet {
+    queens.iter().flat_map(|pos| get_queen_moves(*pos, dims)).collect()
+}
+
 /// Get the coordinates of the possible moves that a queen can
 /// potential make. This identifies the squares a queen is contesting.
-pub fn get_queen_moves(pos: PosCoords, dims: PosCoords) -> CoordSet {
+fn get_queen_moves(pos: PosCoords, dims: PosCoords) -> Vec<PosCoords> {
     [
         get_vert_moves(pos, dims),
         get_horiz_moves(pos, dims),
