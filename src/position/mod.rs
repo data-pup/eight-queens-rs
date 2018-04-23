@@ -1,5 +1,7 @@
 use std::collections::HashSet;
 
+mod coord_iter;
+
 /// Position index. Note: This may be made private?
 pub type PosIndex = usize;
 /// Position coordinates. Note: These are in (x, y) format.
