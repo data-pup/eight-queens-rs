@@ -1,4 +1,4 @@
-use queen::{get_queen_move_sets};
+use queen::get_queen_move_sets;
 use {Board, CoordSet, PosCoords};
 
 /// Check if the board has any conflicted queens.
@@ -6,13 +6,18 @@ pub fn board_has_conflict(board: Board) -> bool {
     let dims: PosCoords = board.dims();
     let queens: CoordSet = board.get_queen_positions();
     let move_sets = get_queen_move_sets(queens.clone(), dims);
-    let temp: usize = queens.into_iter().map(|pos| {
-        let n = move_sets.iter().map(|movements| movements.contains(&pos))
+    let temp: usize = queens
+        .into_iter()
+        .map(|pos| {
+            let n = move_sets
+                .iter()
+                .map(|movements| movements.contains(&pos))
                 .filter(|&in_space| in_space == true)
                 .count();
-        n
-    }).filter(|&num_contesting_space| num_contesting_space != 1)
-    .count();
+            n
+        })
+        .filter(|&num_contesting_space| num_contesting_space != 1)
+        .count();
     let has_conflict = temp != 0;
     has_conflict
 }
