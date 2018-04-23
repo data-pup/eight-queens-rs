@@ -5,4 +5,3 @@ pub struct CheckResult {
     pub has_conflict: bool,
     pub num_queens: u8,
 }
-

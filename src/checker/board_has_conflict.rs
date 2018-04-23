@@ -1,26 +1,34 @@
-mod board_has_conflict;
-mod check_result;
+use queen::get_contested_spaces;
+use queen::get_queen_moves;
+use {Board, CoordSet, PosCoords};
 
-pub use self::check_result::CheckResult;
-
-use Board;
-
-pub fn check_board(board: Board) -> CheckResult {
-    unimplemented!();
+/// Check if the board has any conflicted queens.
+pub fn board_has_conflict(board: Board) -> bool {
+    let board_dims = board.dims();
+    let get_moves = |pos: &PosCoords| get_queen_moves(*pos, board_dims);
+    let queen_positions: CoordSet = board.get_queen_positions();
+    let move_sets = queen_positions
+        .iter()
+        .map(get_moves)
+        .collect::<Vec<CoordSet>>();
+    let total_moves: usize = move_sets.iter().map(|moves| moves.len()).sum();
+    let distinct_moves: usize = get_contested_spaces(queen_positions, board_dims)
+        .into_iter()
+        .count();
+    let has_conflict = total_moves != distinct_moves;
+    has_conflict
 }
 
 #[cfg(test)]
-mod check_result_tests {
-    use super::check_board;
-    use super::CheckResult;
+mod has_conflict_tests {
+    use super::board_has_conflict;
     use Board;
 
     #[test]
     fn default_board_is_not_a_solution_has_no_conflict() {
         let b = Board::new();
-        let sol = check_board(b);
-        assert_eq!(sol.has_conflict, false, "Empty board has no conflict.");
-        assert_eq!(sol.is_solved, false);
+        let res = board_has_conflict(b);
+        assert_eq!(res, false, "Empty board has no conflict.");
     }
 
     ///   01234567
@@ -37,9 +45,7 @@ mod check_result_tests {
     #[test]
     fn board_with_2_adjacent_queens_has_conflict() {
         let b: Board = [(0, 0), (1, 0)].iter().cloned().collect();
-        let sol = check_board(b);
-        assert_eq!(sol.has_conflict, true);
-        assert_eq!(sol.is_solved, false);
+        assert!(board_has_conflict(b));
     }
 
     ///   01234567
@@ -56,9 +62,8 @@ mod check_result_tests {
     #[test]
     fn board_with_two_safe_queens_has_no_conflict() {
         let b: Board = [(0, 0), (7, 2)].iter().cloned().collect();
-        let sol = check_board(b);
-        assert_eq!(sol.has_conflict, false);
-        assert_eq!(sol.is_solved, false);
+        let res = board_has_conflict(b);
+        assert_eq!(res, false);
     }
 
     ///   01234567
@@ -86,9 +91,7 @@ mod check_result_tests {
         ].iter()
             .cloned()
             .collect();
-        let sol = check_board(b);
-        assert_eq!(sol.has_conflict, true);
-        assert_eq!(sol.is_solved, false);
+        assert!(board_has_conflict(b));
     }
 
     ///   01234567
@@ -116,8 +119,7 @@ mod check_result_tests {
         ].iter()
             .cloned()
             .collect();
-        let sol = check_board(b);
-        assert_eq!(sol.has_conflict, false);
-        assert_eq!(sol.is_solved, true);
+        let res = board_has_conflict(b);
+        assert_eq!(res, false);
     }
 }
