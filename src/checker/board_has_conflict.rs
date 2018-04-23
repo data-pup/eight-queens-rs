@@ -6,20 +6,26 @@ pub fn board_has_conflict(board: Board) -> bool {
     let dims: PosCoords = board.dims();
     let queens: CoordSet = board.get_queen_positions();
     let move_sets = get_queen_move_sets(queens.clone(), dims);
-    let temp: usize = queens
+    for queen_in_conflict in queens
         .into_iter()
-        .map(|pos| {
-            let n = move_sets
-                .iter()
-                .map(|movements| movements.contains(&pos))
-                .filter(|&in_space| in_space == true)
-                .count();
-            n
-        })
-        .filter(|&num_contesting_space| num_contesting_space != 1)
+        .map(|pos| pos_in_conflict(pos, &move_sets))
+    {
+        if queen_in_conflict {
+            return true;
+        };
+    }
+    false
+}
+
+/// Returns a boolean value representing whether a position is in more than
+/// one queen's movement space. Used to check if queens are in conflict.
+fn pos_in_conflict(pos: PosCoords, move_sets: &[CoordSet]) -> bool {
+    let num_queens_contesting_space = move_sets
+        .iter()
+        .map(|movements| movements.contains(&pos))
+        .filter(|&in_space| in_space == true)
         .count();
-    let has_conflict = temp != 0;
-    has_conflict
+    num_queens_contesting_space > 1
 }
 
 #[cfg(test)]
