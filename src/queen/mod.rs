@@ -4,7 +4,10 @@ use std::cmp::min;
 /// Return a set of all of the contested spaces on the board, given the
 /// positions of each queen, and the dimensions of the board.
 pub fn get_contested_spaces(queens: CoordSet, dims: PosCoords) -> CoordSet {
-    queens.iter().flat_map(|pos| get_queen_moves(*pos, dims)).collect()
+    queens
+        .iter()
+        .flat_map(|pos| get_queen_moves(*pos, dims))
+        .collect()
 }
 
 /// Get the coordinates of the possible moves that a queen can
@@ -73,11 +76,11 @@ fn get_se_moves(pos: PosCoords, dims: PosCoords) -> Vec<PosCoords> {
 
 #[cfg(test)]
 mod board_queens_tests {
-    use Board;
     use position_types::*;
-    use std::collections::HashSet;
-    use Queens;
     use queen::get_queen_moves;
+    use std::collections::HashSet;
+    use Board;
+    use Queens;
 
     #[test]
     fn add_queen_works() {
@@ -242,8 +245,8 @@ mod get_queen_moves_benches {
     extern crate rand;
     extern crate test;
     use self::test::Bencher;
-    use rand::Rng;
     use queen::get_queen_moves;
+    use rand::Rng;
 
     #[bench]
     fn get_queen_moves_bench(bencher: &mut Bencher) {

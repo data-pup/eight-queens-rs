@@ -1,6 +1,6 @@
 use super::QueenState;
-use Board;
 use queen::get_queen_moves;
+use Board;
 
 /// This function will create a vector of each queen's current position,
 /// along with a set of the moves that queen could make.
@@ -15,12 +15,15 @@ pub fn get_queen_states(board: &Board) -> Vec<QueenState> {
     //     .collect()
     let dims = board.dims();
     let queens = board.get_queen_positions();
-    queens.iter().map(|pos| {
-        QueenState {
-            pos: *pos,
-            moves: get_queen_moves(*pos, dims).iter().cloned().collect(), // FIXUP.
-        }
-    }).collect()
+    queens
+        .iter()
+        .map(|pos| {
+            QueenState {
+                pos: *pos,
+                moves: get_queen_moves(*pos, dims).iter().cloned().collect(), // FIXUP.
+            }
+        })
+        .collect()
 }
 
 #[cfg(test)]

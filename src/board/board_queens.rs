@@ -1,14 +1,12 @@
 use super::Board;
-use {CoordSet, Queens};
 use queen::get_contested_spaces;
+use {CoordSet, Queens};
 
 impl Queens for Board {
     /// Get a set of the uncontested spaces on the board. This identifies the
     /// positions at which a new queen can be added to the board.
     fn get_uncontested_spaces(&self) -> CoordSet {
-        let contested_spaces = get_contested_spaces(
-            self.get_queen_positions(),
-            self.dims());
+        let contested_spaces = get_contested_spaces(self.get_queen_positions(), self.dims());
         let mut uncontested = CoordSet::new();
         for y in 0..self.height {
             for x in 0..self.width {
