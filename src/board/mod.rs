@@ -1,6 +1,7 @@
 use position_types::*;
 use {PosError, Square};
 
+mod board_from_dims;
 mod board_from_pos_iter;
 mod board_queens;
 mod board_reflect;
