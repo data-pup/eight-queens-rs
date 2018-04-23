@@ -3,6 +3,7 @@
 extern crate rand;
 
 pub mod board;
+pub mod checker;
 pub mod position;
 pub mod queen;
 pub mod solver;
