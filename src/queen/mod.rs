@@ -101,7 +101,7 @@ mod board_queens_tests {
     ///   --------
     #[test]
     fn get_queen_moves_works_from_2_2() {
-        let b = Board::new();
+        let dims = (8, 8);
         let pos = (2, 2);
         let expected: CoordSet = [
             (0, 0),
@@ -133,7 +133,7 @@ mod board_queens_tests {
         ].iter()
             .cloned()
             .collect();
-        let result = get_queen_moves(pos, (8, 8));
+        let result = get_queen_moves(pos, dims);
         assert_eq!(result, expected);
     }
 
@@ -150,7 +150,7 @@ mod board_queens_tests {
     ///   --------
     #[test]
     fn get_queen_moves_works_from_7_7() {
-        let b = Board::new();
+        let dims = (8, 8);
         let pos = (7, 7);
         let expected: CoordSet = [
             (0, 0),
@@ -178,7 +178,7 @@ mod board_queens_tests {
         ].iter()
             .cloned()
             .collect();
-        let result = get_queen_moves(pos, (8, 8));
+        let result = get_queen_moves(pos, dims);
         assert_eq!(
             result,
             expected,
@@ -243,7 +243,6 @@ mod get_queen_moves_benches {
     extern crate test;
     use self::test::Bencher;
     use rand::Rng;
-    use Queens;
     use queen::get_queen_moves;
 
     #[bench]
@@ -252,8 +251,9 @@ mod get_queen_moves_benches {
         let x = rng.gen_range::<u32>(0, 8);
         let y = rng.gen_range::<u32>(0, 8);
         let pos = (x, y);
+        let dims = (8, 8);
         bencher.iter(|| {
-            let _ = get_queen_moves(pos, (8, 8));
+            let _ = get_queen_moves(pos, dims);
         });
     }
 }
