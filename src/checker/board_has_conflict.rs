@@ -1,21 +1,19 @@
-use queen::get_contested_spaces;
-use queen::get_queen_moves;
+use queen::{get_queen_move_sets};
 use {Board, CoordSet, PosCoords};
 
 /// Check if the board has any conflicted queens.
 pub fn board_has_conflict(board: Board) -> bool {
-    let board_dims = board.dims();
-    let get_moves = |pos: &PosCoords| get_queen_moves(*pos, board_dims);
-    let queen_positions: CoordSet = board.get_queen_positions();
-    let move_sets = queen_positions
-        .iter()
-        .map(get_moves)
-        .collect::<Vec<CoordSet>>();
-    let total_moves: usize = move_sets.iter().map(|moves| moves.len()).sum();
-    let distinct_moves: usize = get_contested_spaces(queen_positions, board_dims)
-        .into_iter()
-        .count();
-    let has_conflict = total_moves != distinct_moves;
+    let dims: PosCoords = board.dims();
+    let queens: CoordSet = board.get_queen_positions();
+    let move_sets = get_queen_move_sets(queens.clone(), dims);
+    let temp: usize = queens.into_iter().map(|pos| {
+        let n = move_sets.iter().map(|movements| movements.contains(&pos))
+                .filter(|&in_space| in_space == true)
+                .count();
+        n
+    }).filter(|&num_contesting_space| num_contesting_space != 1)
+    .count();
+    let has_conflict = temp != 0;
     has_conflict
 }
 
