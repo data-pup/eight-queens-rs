@@ -1,13 +1,14 @@
 use Board;
 
 struct CoordIter {
-    _width: u32,
-    _height: u32,
+    height: u32,
+    width: u32,
 }
 
 impl From<Board> for CoordIter {
-    fn from(_board: Board) -> CoordIter {
-        unimplemented!();
+    fn from(board: Board) -> CoordIter {
+        let (width, height) = board.dims();
+        CoordIter { height, width }
     }
 }
 
@@ -16,11 +17,14 @@ impl From<Board> for CoordIter {
 
 #[cfg(test)]
 mod coord_iter_tests {
+    use Board;
     use super::CoordIter;
 
     #[test]
     fn coord_iter_can_be_created_from_board() {
-        unimplemented!();
+        let coord_iter = CoordIter::from(Board::new());
+        assert_eq!(coord_iter.height, 8);
+        assert_eq!(coord_iter.width, 8);
     }
 
     #[test]
