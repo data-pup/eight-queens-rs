@@ -9,6 +9,9 @@ pub type PosCoords = (u32, u32);
 // A set of position coordinates representing the current queen positions.
 pub type CoordSet = HashSet<PosCoords>;
 
+/// This struct is used to create an iterator across a board's coordinate space.
+pub use self::coord_iter::CoordIter;
+
 /// Position errors. Thrown if a coordinate access attempt is out of bounds.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum PosError {

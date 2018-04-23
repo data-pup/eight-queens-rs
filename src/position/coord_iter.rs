@@ -1,6 +1,6 @@
 use {Board, PosCoords};
 
-struct CoordIter {
+pub struct CoordIter {
     height: u32,
     width: u32,
     curr_x: u32,
