@@ -15,7 +15,7 @@ impl From<PosCoords> for Board {
 
 #[cfg(test)]
 mod board_from_coords_tests {
-    use {Board, PosCoords};
+    use Board;
 
     #[test]
     fn board_of_size_3_by_3_can_be_created_from_coords() {
