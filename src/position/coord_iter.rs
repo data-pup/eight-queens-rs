@@ -81,9 +81,9 @@ mod coord_iter_tests {
 mod coord_iter_benches {
     extern crate test;
 
+    use self::test::Bencher;
     use super::CoordIter;
     use {Board, PosCoords};
-    use self::test::Bencher;
 
     #[bench]
     fn time_collection_of_3_by_3_coord_space(bencher: &mut Bencher) {
