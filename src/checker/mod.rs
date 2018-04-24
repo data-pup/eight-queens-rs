@@ -11,13 +11,20 @@ use Board;
 /// the given positions represent a solution to the eight problem, etc.
 pub fn check_board(board: Board) -> CheckResult {
     let num_queens = board.get_queen_positions().len() as u8;
+    let num_free_spaces = get_total_number_of_squares(&board) - num_queens;
     let has_conflict = board_has_conflict(board);
     let is_solved = num_queens == 8 && !has_conflict;
     CheckResult {
         is_solved,
         has_conflict,
         num_queens,
+        num_free_spaces,
     }
+}
+
+fn get_total_number_of_squares(b: &Board) -> u8 {
+    let (width, height) = b.dims();
+    (width * height) as u8
 }
 
 #[cfg(test)]
@@ -34,6 +41,7 @@ mod check_result_tests {
             is_solved: false,
             has_conflict: false,
             num_queens: 0,
+            num_free_spaces: 64,
         };
         assert_eq!(check_res, expected);
     }
@@ -57,6 +65,7 @@ mod check_result_tests {
             is_solved: false,
             has_conflict: true,
             num_queens: 2,
+            num_free_spaces: 62,
         };
         assert_eq!(check_res, expected);
     }
@@ -80,6 +89,7 @@ mod check_result_tests {
             is_solved: false,
             has_conflict: false,
             num_queens: 2,
+            num_free_spaces: 62,
         };
         assert_eq!(check_res, expected);
     }
@@ -114,6 +124,7 @@ mod check_result_tests {
             is_solved: false,
             has_conflict: true,
             num_queens: 8,
+            num_free_spaces: 56,
         };
         assert_eq!(check_res, expected);
     }
@@ -148,6 +159,7 @@ mod check_result_tests {
             is_solved: true,
             has_conflict: false,
             num_queens: 8,
+            num_free_spaces: 56,
         };
         assert_eq!(check_res, expected);
     }
