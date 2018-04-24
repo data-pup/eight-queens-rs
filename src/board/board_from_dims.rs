@@ -8,7 +8,7 @@ impl From<PosCoords> for Board {
         Board {
             height,
             width,
-            queens: CoordSet::new(),
+            queens: Vec::new(),
         }
     }
 }

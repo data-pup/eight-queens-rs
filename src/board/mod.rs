@@ -11,7 +11,7 @@ mod board_to_string;
 pub struct Board {
     width: u32,
     height: u32,
-    queens: CoordSet,
+    queens: Vec<PosCoords>,
 }
 
 impl Board {
@@ -19,7 +19,7 @@ impl Board {
     pub fn new() -> Board {
         let width = 8;
         let height = 8;
-        let queens = CoordSet::new();
+        let queens = Vec::new();
         Board {
             width,
             height,
@@ -64,7 +64,8 @@ impl Board {
     /// Add a queen to the board at the given position.
     pub fn add_queen(&mut self, pos: PosCoords) {
         if self.in_bounds(&pos) {
-            self.queens.insert(pos);
+            self.queens.push(pos);
+            self.queens.sort();
         } else {
             panic!("Cannot add queen at position {:?}", pos);
         }
@@ -72,7 +73,7 @@ impl Board {
 
     /// Get a clone of the hash set containing the queen's positions.
     pub fn get_queen_positions(&self) -> CoordSet {
-        self.queens.clone()
+        self.queens.iter().cloned().collect()
     }
 }
 
