@@ -1,3 +1,5 @@
+use std::collections::BinaryHeap;
+
 mod update_visited;
 
 use checker::{check_board, CheckResult};
@@ -25,9 +27,14 @@ impl Solver {
     }
 
     /// Create a vector of the next possible moves.
-    /// TODO: Return in descending order sorted by number of remaining
-    /// uncontested squares on the board?
     fn _get_next_moves(&self) -> Vec<Solver> {
+        // TODO:
+        // ?. Add the current position list, and its reflections, to some cache.
+        // 1. Get the uncontested spaces on the board.
+        // 2. Map the uncontested spaces into solution check results.
+        // 3. Sort them descending according to which has the most free spaces.
+        // 4. Take (n) next moves, and get the solutions for those states.
+
         unimplemented!();
         // self._curr_board
         //     .get_uncontested_spaces()
