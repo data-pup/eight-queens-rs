@@ -1,6 +1,12 @@
+mod update_visited;
+
 use checker::{check_board, CheckResult};
-use Board;
-use {CoordSet, Queens, Solutions};
+use {Board, CoordSet, Queens, Solutions};
+
+/// FIXUP: This will be the new function, the solver struct will not be public.
+pub fn get_solution() {
+    unimplemented!();
+}
 
 /// This struct is used to find solutions to the problem, given a board state.
 #[derive(Clone, Debug)]

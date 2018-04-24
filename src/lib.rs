@@ -10,6 +10,7 @@ pub mod solver;
 
 pub use board::Board;
 pub use position::position_types;
+pub use solver::get_solution;
 use position::position_types::*;
 
 /// Square type, this represent whether or not a square is occupied.
@@ -27,9 +28,9 @@ pub trait Queens {
 
 /// This trait is used to identify reflections of a given state.
 pub trait Reflection {
-    fn get_horizontal_reflection(&self) -> Board;
-    fn get_vertical_reflection(&self) -> Board;
-    fn get_inverse(&self) -> Board;
+    fn get_horizontal_reflection(&self) -> CoordSet;
+    fn get_vertical_reflection(&self) -> CoordSet;
+    fn get_inverse(&self) -> CoordSet;
 }
 
 /// Solutions trait, this specifies the method to be called to calculate

@@ -6,8 +6,10 @@ mod coord_iter;
 pub type PosIndex = usize;
 /// Position coordinates. Note: These are in (x, y) format.
 pub type PosCoords = (u32, u32);
-// A set of position coordinates representing the current queen positions.
+/// A set of position coordinates representing the current queen positions.
 pub type CoordSet = HashSet<PosCoords>;
+/// A set of coordinate sets, representing a set of queen position arrangements.
+pub type StateSet = HashSet<CoordSet>;
 
 /// This struct is used to create an iterator across a board's coordinate space.
 pub use self::coord_iter::CoordIter;
@@ -25,4 +27,5 @@ pub mod position_types {
     pub use super::PosCoords;
     pub use super::PosError;
     pub use super::PosIndex;
+    pub use super::StateSet;
 }
