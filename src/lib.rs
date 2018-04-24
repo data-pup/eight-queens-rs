@@ -11,7 +11,6 @@ pub mod solver;
 pub use board::Board;
 pub use position::position_types;
 use position::position_types::*;
-pub use solver::get_solution;
 
 /// Square type, this represent whether or not a square is occupied.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -25,10 +24,4 @@ pub trait Reflection {
     fn get_horizontal_reflection(&self) -> CoordList;
     fn get_vertical_reflection(&self) -> CoordList;
     fn get_inverse(&self) -> CoordList;
-}
-
-/// Solutions trait, this specifies the method to be called to calculate
-/// solutions to the problem, and return them as a set.
-pub trait Solutions {
-    fn get_solutions(&self) -> Option<Vec<Vec<PosCoords>>>;
 }
