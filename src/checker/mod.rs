@@ -29,9 +29,13 @@ mod check_result_tests {
     #[test]
     fn default_board_is_not_a_solution_has_no_conflict() {
         let b = Board::new();
-        let sol = check_board(b);
-        assert_eq!(sol.has_conflict, false, "Empty board has no conflict.");
-        assert_eq!(sol.is_solved, false);
+        let check_res = check_board(b);
+        let expected = CheckResult {
+            is_solved: false,
+            has_conflict: false,
+            num_queens: 0,
+        };
+        assert_eq!(check_res, expected);
     }
 
     ///   01234567
@@ -48,9 +52,13 @@ mod check_result_tests {
     #[test]
     fn board_with_2_adjacent_queens_has_conflict() {
         let b: Board = [(0, 0), (1, 0)].iter().cloned().collect();
-        let sol = check_board(b);
-        assert_eq!(sol.has_conflict, true);
-        assert_eq!(sol.is_solved, false);
+        let check_res = check_board(b);
+        let expected = CheckResult {
+            is_solved: false,
+            has_conflict: true,
+            num_queens: 2,
+        };
+        assert_eq!(check_res, expected);
     }
 
     ///   01234567
@@ -67,9 +75,13 @@ mod check_result_tests {
     #[test]
     fn board_with_two_safe_queens_has_no_conflict() {
         let b: Board = [(0, 0), (7, 2)].iter().cloned().collect();
-        let sol = check_board(b);
-        assert_eq!(sol.has_conflict, false);
-        assert_eq!(sol.is_solved, false);
+        let check_res = check_board(b);
+        let expected = CheckResult {
+            is_solved: false,
+            has_conflict: false,
+            num_queens: 2,
+        };
+        assert_eq!(check_res, expected);
     }
 
     ///   01234567
@@ -97,9 +109,13 @@ mod check_result_tests {
         ].iter()
             .cloned()
             .collect();
-        let sol = check_board(b);
-        assert_eq!(sol.has_conflict, true);
-        assert_eq!(sol.is_solved, false);
+        let check_res = check_board(b);
+        let expected = CheckResult {
+            is_solved: false,
+            has_conflict: true,
+            num_queens: 8,
+        };
+        assert_eq!(check_res, expected);
     }
 
     ///   01234567
@@ -127,8 +143,12 @@ mod check_result_tests {
         ].iter()
             .cloned()
             .collect();
-        let sol = check_board(b);
-        assert_eq!(sol.has_conflict, false);
-        assert_eq!(sol.is_solved, true);
+        let check_res = check_board(b);
+        let expected = CheckResult {
+            is_solved: true,
+            has_conflict: false,
+            num_queens: 8,
+        };
+        assert_eq!(check_res, expected);
     }
 }
