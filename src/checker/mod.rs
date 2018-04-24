@@ -2,11 +2,22 @@ mod board_has_conflict;
 mod check_result;
 
 pub use self::check_result::CheckResult;
+use self::board_has_conflict::board_has_conflict;
 
 use Board;
 
+/// Check the state of the board. Returns a `CheckResult` object, containing
+/// information about whether the given positions contain a conflict, whether
+/// the given positions represent a solution to the eight problem, etc.
 pub fn check_board(board: Board) -> CheckResult {
-    unimplemented!();
+    let num_queens = board.get_queen_positions().len() as u8;
+    let has_conflict = board_has_conflict(board);
+    let is_solved = num_queens == 8 && !has_conflict;
+    CheckResult {
+        is_solved,
+        has_conflict,
+        num_queens,
+    }
 }
 
 #[cfg(test)]
