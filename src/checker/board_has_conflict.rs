@@ -1,5 +1,5 @@
 use queen::get_queen_move_sets;
-use {Board, CoordSet, PosCoords};
+use {Board, CoordList, PosCoords};
 
 /// Check if the board has any conflicted queens.
 pub fn board_has_conflict(board: Board) -> bool {
@@ -19,7 +19,7 @@ pub fn board_has_conflict(board: Board) -> bool {
 
 /// Returns a boolean value representing whether a position is in more than
 /// one queen's movement space. Used to check if queens are in conflict.
-fn pos_in_conflict(pos: PosCoords, move_sets: &[CoordSet]) -> bool {
+fn pos_in_conflict(pos: PosCoords, move_sets: &[CoordList]) -> bool {
     let num_queens_contesting_space = move_sets
         .iter()
         .map(|movements| movements.contains(&pos))

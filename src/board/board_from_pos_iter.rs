@@ -16,13 +16,13 @@ impl FromIterator<PosCoords> for Board {
 mod board_from_pos_iter_tests {
     use super::Board;
     use std::iter::empty;
-    use CoordSet;
+    use CoordList;
 
     #[test]
     fn create_board_from_empty_iter() {
         let b: Board = empty().into_iter().collect();
         let results = b.get_queen_positions();
-        let expected: CoordSet = CoordSet::new();
+        let expected: CoordList = CoordList::new();
         assert_eq!(results, expected);
         assert_eq!(b.height, 8);
         assert_eq!(b.width, 8);
@@ -31,7 +31,7 @@ mod board_from_pos_iter_tests {
     #[test]
     fn create_board_with_two_queens() {
         let b: Board = [(0, 0), (0, 1)].iter().cloned().collect();
-        let expected: CoordSet = [(0, 0), (0, 1)].iter().cloned().collect();
+        let expected: CoordList = [(0, 0), (0, 1)].iter().cloned().collect();
         assert_eq!(b.get_queen_positions(), expected);
     }
 }

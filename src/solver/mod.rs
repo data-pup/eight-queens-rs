@@ -1,7 +1,7 @@
 mod update_visited;
 
 use checker::{check_board, CheckResult};
-use {Board, CoordSet, PosCoords, Solutions};
+use {Board, CoordList, PosCoords, Solutions};
 
 /// FIXUP: This will be the new function, the solver struct will not be public.
 pub fn get_solution() {
@@ -124,7 +124,7 @@ mod get_next_moves_bench {
 #[cfg(test)]
 mod get_solutions_tests {
     use super::Solver;
-    use {Board, CoordSet, Solutions};
+    use {Board, CoordList, Solutions};
 
     /// Time the `get_solutions` method, starting at a position with 7 queens
     /// on the board. One queen placed at (5, 7) will solve the problem.
@@ -136,7 +136,7 @@ mod get_solutions_tests {
             .collect();
         let solver = Solver::new(b);
         let soln_set = solver.get_solutions().unwrap();
-        let expected_soln_coords: Vec<CoordSet> = vec![
+        let expected_soln_coords: Vec<CoordList> = vec![
             [
                 (2, 0),
                 (4, 1),

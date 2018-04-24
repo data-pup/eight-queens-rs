@@ -1,4 +1,4 @@
-use {Reflection, CoordSet, StateSet};
+use {Reflection, StateSet};
 
 /// Given a set of coordinates representing the positions of the queens on
 /// the board, return a set of coordinate sets, representing the reflections

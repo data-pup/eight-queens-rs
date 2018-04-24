@@ -1,21 +1,21 @@
-use {Board, CoordSet, PosCoords, Reflection};
+use {Board, CoordList, PosCoords, Reflection};
 
 impl Reflection for Board {
-    fn get_horizontal_reflection(&self) -> CoordSet {
+    fn get_horizontal_reflection(&self) -> CoordList {
         self.get_queen_positions()
             .iter()
             .map(|pos| self.get_pos_horizontal_reflection(pos))
             .collect()
     }
 
-    fn get_vertical_reflection(&self) -> CoordSet {
+    fn get_vertical_reflection(&self) -> CoordList {
         self.get_queen_positions()
             .iter()
             .map(|pos| self.get_pos_vertical_reflection(pos))
             .collect()
     }
 
-    fn get_inverse(&self) -> CoordSet {
+    fn get_inverse(&self) -> CoordList {
         self.get_queen_positions()
             .iter()
             .map(|pos| self.get_pos_inverse(pos))

@@ -1,6 +1,6 @@
 use std::convert::From;
 
-use {Board, CoordSet, PosCoords};
+use {Board, CoordList, PosCoords};
 
 impl From<PosCoords> for Board {
     fn from(dims: PosCoords) -> Board {

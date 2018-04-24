@@ -1,17 +1,20 @@
-use position_types::{CoordSet, PosCoords};
+use position_types::{CoordList, PosCoords};
 use std::cmp::min;
 
 /// Return a set of all of the contested spaces on the board, given the
 /// positions of each queen, and the dimensions of the board.
-pub fn get_contested_spaces(queens: Vec<PosCoords>, dims: PosCoords) -> CoordSet {
-    get_queen_move_sets(queens, dims)
+pub fn get_contested_spaces(queens: Vec<PosCoords>, dims: PosCoords) -> CoordList {
+    let mut coords = get_queen_move_sets(queens, dims)
         .into_iter()
         .flatten()
-        .collect()
+        .collect::<CoordList>();
+    coords.sort();
+    coords.dedup();
+    coords
 }
 
 /// Returns a vector of coordinate sets representing each queen's possible moves.
-pub fn get_queen_move_sets(queens: Vec<PosCoords>, dims: PosCoords) -> Vec<CoordSet> {
+pub fn get_queen_move_sets(queens: Vec<PosCoords>, dims: PosCoords) -> Vec<CoordList> {
     queens
         .into_iter()
         .map(|pos| get_queen_moves(pos, dims))
@@ -20,18 +23,21 @@ pub fn get_queen_move_sets(queens: Vec<PosCoords>, dims: PosCoords) -> Vec<Coord
 
 /// Get the coordinates of the possible moves that a queen can
 /// potential make. This identifies the squares a queen is contesting.
-pub fn get_queen_moves(pos: PosCoords, dims: PosCoords) -> CoordSet {
-    [
+pub fn get_queen_moves(pos: PosCoords, dims: PosCoords) -> CoordList {
+    let mut moves = [
         get_vert_moves(pos, dims),
         get_horiz_moves(pos, dims),
         get_nw_moves(pos, dims),
         get_ne_moves(pos, dims),
         get_sw_moves(pos, dims),
         get_se_moves(pos, dims),
-    ].iter()
+    ].into_iter()
         .flatten()
         .cloned()
-        .collect()
+        .collect::<CoordList>();
+    moves.sort();
+    moves.dedup();
+    moves
 }
 
 /// This function will return a vector of the vertical moves a queen at
@@ -83,19 +89,18 @@ fn get_se_moves(pos: PosCoords, dims: PosCoords) -> Vec<PosCoords> {
 }
 
 #[cfg(test)]
-mod board_queens_tests {
+mod queens_tests {
     use position_types::*;
-    use queen::get_queen_moves;
+    use super::{get_queen_moves, get_contested_spaces};
     use std::collections::HashSet;
     use Board;
-    use Queens;
 
     #[test]
     fn add_queen_works() {
         let queen_positions: &[PosCoords] = &[(0, 0), (0, 7), (7, 0), (7, 7)];
         let board = queen_positions.iter().cloned().collect::<Board>();
         let queen_positions = board.get_queen_positions();
-        let expected = queen_positions.iter().cloned().collect::<CoordSet>();
+        let expected = queen_positions.to_vec();
         assert_eq!(queen_positions, expected);
     }
 
@@ -114,36 +119,34 @@ mod board_queens_tests {
     fn get_queen_moves_works_from_2_2() {
         let dims = (8, 8);
         let pos = (2, 2);
-        let expected: CoordSet = [
+        let expected: CoordList = vec![
             (0, 0),
-            (2, 0),
-            (4, 0),
-            (1, 1),
-            (2, 1),
-            (3, 1),
             (0, 2),
-            (1, 2),
-            (2, 2),
-            (3, 2),
-            (4, 2),
-            (5, 2),
-            (6, 2),
-            (7, 2),
-            (1, 3),
-            (2, 3),
-            (3, 3),
             (0, 4),
+            (1, 1),
+            (1, 2),
+            (1, 3),
+            (2, 0),
+            (2, 1),
+            (2, 2),
+            (2, 3),
             (2, 4),
-            (4, 4),
             (2, 5),
-            (5, 5),
             (2, 6),
-            (6, 6),
             (2, 7),
+            (3, 1),
+            (3, 2),
+            (3, 3),
+            (4, 0),
+            (4, 2),
+            (4, 4),
+            (5, 2),
+            (5, 5),
+            (6, 2),
+            (6, 6),
+            (7, 2),
             (7, 7),
-        ].iter()
-            .cloned()
-            .collect();
+        ];
         let result = get_queen_moves(pos, dims);
         assert_eq!(result, expected);
     }
@@ -163,14 +166,21 @@ mod board_queens_tests {
     fn get_queen_moves_works_from_7_7() {
         let dims = (8, 8);
         let pos = (7, 7);
-        let expected: CoordSet = [
+        let expected: CoordList = vec![
             (0, 0),
+            (0, 7),
             (1, 1),
+            (1, 7),
             (2, 2),
+            (2, 7),
             (3, 3),
+            (3, 7),
             (4, 4),
+            (4, 7),
             (5, 5),
+            (5, 7),
             (6, 6),
+            (6, 7),
             (7, 0),
             (7, 1),
             (7, 2),
@@ -178,31 +188,15 @@ mod board_queens_tests {
             (7, 4),
             (7, 5),
             (7, 6),
-            (0, 7),
-            (1, 7),
-            (2, 7),
-            (3, 7),
-            (4, 7),
-            (5, 7),
-            (6, 7),
             (7, 7),
-        ].iter()
-            .cloned()
-            .collect();
+        ];
         let result = get_queen_moves(pos, dims);
-        assert_eq!(
-            result,
-            expected,
-            "Difference: {:?}",
-            expected.difference(&result)
-        );
+        assert_eq!(result, expected);
     }
 
-    /// This function tests uncontested spaces for the following state:
-    /// NOTE: Q's are queens, x's are contested spaces.
     ///   01234567
     ///   --------
-    /// 7|QxxxxxxQ|
+    /// 7|x      x|
     /// 6|xx    xx|
     /// 5|x x  x x|
     /// 4|x  xx  x|
@@ -212,39 +206,54 @@ mod board_queens_tests {
     /// 0|QxxxxxxQ|
     ///   --------
     #[test]
-    fn get_uncontested_moves_works_for_queens_in_corners() {
-        let queen_positions: &[PosCoords] = &[(0, 0), (0, 7), (7, 0), (7, 7)];
-        let board = queen_positions.iter().cloned().collect::<Board>();
-        let expected: HashSet<PosCoords> = [
-            (2, 6),
-            (3, 6),
-            (4, 6),
-            (5, 6),
-            (1, 5),
-            (3, 5),
-            (4, 5),
-            (6, 5),
-            (1, 4),
-            (2, 4),
-            (5, 4),
-            (6, 4),
-            (1, 3),
-            (2, 3),
-            (5, 3),
-            (6, 3),
-            (1, 2),
-            (3, 2),
-            (4, 2),
-            (6, 2),
-            (2, 1),
-            (3, 1),
-            (4, 1),
-            (5, 1),
-        ].iter()
-            .cloned()
-            .collect();
-        let results = board.get_uncontested_spaces();
-        assert_eq!(results, expected);
+    fn get_contested_moves_works_for_two_queens() {
+        let queen_positions: &[PosCoords] = &[(0, 0), (7, 0)];
+        let dims = (8, 8);
+        let expected: CoordList = vec![
+            (0, 0),
+            (0, 1),
+            (0, 2),
+            (0, 3),
+            (0, 4),
+            (0, 5),
+            (0, 6),
+            (0, 7),
+
+            (1, 0),
+            (1, 1),
+            (1, 6),
+
+            (2, 0),
+            (2, 2),
+            (2, 5),
+
+            (3, 0),
+            (3, 3),
+            (3, 4),
+
+            (4, 0),
+            (4, 3),
+            (4, 4),
+
+            (5, 0),
+            (5, 2),
+            (5, 5),
+
+            (6, 0),
+            (6, 1),
+            (6, 6),
+
+            (7, 0),
+            (7, 1),
+            (7, 2),
+            (7, 3),
+            (7, 4),
+            (7, 5),
+            (7, 6),
+            (7, 7),
+        ];
+        let result = get_contested_spaces(queen_positions.to_vec(), dims);
+        assert_eq!(result, expected);
     }
 }
 

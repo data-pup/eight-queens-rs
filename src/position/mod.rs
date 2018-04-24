@@ -6,10 +6,10 @@ mod coord_iter;
 pub type PosIndex = usize;
 /// Position coordinates. Note: These are in (x, y) format.
 pub type PosCoords = (u32, u32);
-/// A set of position coordinates representing the current queen positions.
-pub type CoordSet = HashSet<PosCoords>;
+/// A list of positions.
+pub type CoordList = Vec<PosCoords>;
 /// A set of coordinate sets, representing a set of queen position arrangements.
-pub type StateSet = HashSet<CoordSet>;
+pub type StateSet = HashSet<CoordList>;
 
 /// This struct is used to create an iterator across a board's coordinate space.
 pub use self::coord_iter::CoordIter;
@@ -23,7 +23,7 @@ pub enum PosError {
 /// Module used to import the different position types, and the error enum
 /// that can be returned in the event of an invalid coordinate pair.
 pub mod position_types {
-    pub use super::CoordSet;
+    pub use super::CoordList;
     pub use super::PosCoords;
     pub use super::PosError;
     pub use super::PosIndex;
