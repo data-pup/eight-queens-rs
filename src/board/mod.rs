@@ -3,7 +3,6 @@ use {PosError, Square};
 
 mod board_from_dims;
 mod board_from_pos_iter;
-mod board_queens;
 mod board_reflect;
 mod board_to_string;
 
@@ -72,8 +71,8 @@ impl Board {
     }
 
     /// Get a clone of the hash set containing the queen's positions.
-    pub fn get_queen_positions(&self) -> CoordSet {
-        self.queens.iter().cloned().collect()
+    pub fn get_queen_positions(&self) -> Vec<PosCoords> {
+        self.queens.clone()
     }
 }
 

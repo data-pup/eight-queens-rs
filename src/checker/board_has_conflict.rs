@@ -4,7 +4,7 @@ use {Board, CoordSet, PosCoords};
 /// Check if the board has any conflicted queens.
 pub fn board_has_conflict(board: Board) -> bool {
     let dims: PosCoords = board.dims();
-    let queens: CoordSet = board.get_queen_positions();
+    let queens: Vec<PosCoords> = board.get_queen_positions();
     let move_sets = get_queen_move_sets(queens.clone(), dims);
     for queen_in_conflict in queens
         .into_iter()

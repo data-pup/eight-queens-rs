@@ -20,12 +20,6 @@ pub enum Square {
     Queen = 1,
 }
 
-/// This trait specifies methods related to adding queens, finding their
-/// positions, and finding their possible moves on the board.
-pub trait Queens {
-    fn get_uncontested_spaces(&self) -> CoordSet;
-}
-
 /// This trait is used to identify reflections of a given state.
 pub trait Reflection {
     fn get_horizontal_reflection(&self) -> CoordSet;
@@ -36,5 +30,5 @@ pub trait Reflection {
 /// Solutions trait, this specifies the method to be called to calculate
 /// solutions to the problem, and return them as a set.
 pub trait Solutions {
-    fn get_solutions(&self) -> Option<Vec<CoordSet>>;
+    fn get_solutions(&self) -> Option<Vec<Vec<PosCoords>>>;
 }

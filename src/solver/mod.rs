@@ -1,7 +1,7 @@
 mod update_visited;
 
 use checker::{check_board, CheckResult};
-use {Board, CoordSet, Queens, Solutions};
+use {Board, CoordSet, PosCoords, Solutions};
 
 /// FIXUP: This will be the new function, the solver struct will not be public.
 pub fn get_solution() {
@@ -28,17 +28,18 @@ impl Solver {
     /// TODO: Return in descending order sorted by number of remaining
     /// uncontested squares on the board?
     fn _get_next_moves(&self) -> Vec<Solver> {
-        self._curr_board
-            .get_uncontested_spaces()
-            .iter()
-            .map(|&pos| {
-                let mut next_state = self._curr_board.clone();
-                next_state.add_queen(pos);
-                next_state
-            })
-            .map(Solver::new)
-            .filter(|s| !s._soln_state.has_conflict)
-            .collect::<Vec<Solver>>()
+        unimplemented!();
+        // self._curr_board
+        //     .get_uncontested_spaces()
+        //     .iter()
+        //     .map(|&pos| {
+        //         let mut next_state = self._curr_board.clone();
+        //         next_state.add_queen(pos);
+        //         next_state
+        //     })
+        //     .map(Solver::new)
+        //     .filter(|s| !s._soln_state.has_conflict)
+        //     .collect::<Vec<Solver>>()
     }
 }
 
@@ -46,7 +47,7 @@ impl Solver {
 /// of solutions.
 impl Solutions for Solver {
     /// Calculate solutions to the problem.
-    fn get_solutions(&self) -> Option<Vec<CoordSet>> {
+    fn get_solutions(&self) -> Option<Vec<Vec<PosCoords>>> {
         if self._soln_state.has_conflict {
             None
         } else if self._soln_state.is_solved {
@@ -57,7 +58,7 @@ impl Solutions for Solver {
                 .iter()
                 .filter_map(|next_move| next_move.get_solutions())
                 .flatten()
-                .collect::<Vec<CoordSet>>();
+                .collect::<Vec<Vec<PosCoords>>>();
             Some(solns)
         }
     }

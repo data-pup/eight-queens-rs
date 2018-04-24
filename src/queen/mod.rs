@@ -3,7 +3,7 @@ use std::cmp::min;
 
 /// Return a set of all of the contested spaces on the board, given the
 /// positions of each queen, and the dimensions of the board.
-pub fn get_contested_spaces(queens: CoordSet, dims: PosCoords) -> CoordSet {
+pub fn get_contested_spaces(queens: Vec<PosCoords>, dims: PosCoords) -> CoordSet {
     get_queen_move_sets(queens, dims)
         .into_iter()
         .flatten()
@@ -11,7 +11,7 @@ pub fn get_contested_spaces(queens: CoordSet, dims: PosCoords) -> CoordSet {
 }
 
 /// Returns a vector of coordinate sets representing each queen's possible moves.
-pub fn get_queen_move_sets(queens: CoordSet, dims: PosCoords) -> Vec<CoordSet> {
+pub fn get_queen_move_sets(queens: Vec<PosCoords>, dims: PosCoords) -> Vec<CoordSet> {
     queens
         .into_iter()
         .map(|pos| get_queen_moves(pos, dims))
