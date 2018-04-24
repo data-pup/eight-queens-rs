@@ -2,9 +2,10 @@ use std::collections::{BinaryHeap, HashSet};
 
 mod update_visited;
 
+use checker::{check_board, CheckResult};
+use position::CoordIter;
+use queen::get_contested_spaces;
 use {Board, CoordList, PosCoords};
-// use checker::{check_board, CheckResult};
-// use position::CoordIter;
 
 /// This struct is used to find solutions to the problem, given a board state.
 #[derive(Clone, Debug)]
@@ -41,6 +42,24 @@ impl Solver {
         // 2. Map the uncontested spaces into solution check results.
         // 3. Sort them descending according to which has the most free spaces.
         // 4. Take (n) next moves, and get the solutions for those states.
+        if let Some(queen_positions) = self._state_heap.pop() {
+            let board = queen_positions.iter().cloned().collect::<Board>();
+            let contested: HashSet<PosCoords> =
+                get_contested_spaces(queen_positions, self._dimensions)
+                    .iter()
+                    .cloned()
+                    .collect();
+            let uncontested: HashSet<PosCoords> = CoordIter::from(board.clone())
+                .filter(|pos| !contested.contains(pos))
+                .collect();
+            let move_checks = uncontested.into_iter().map(|new_queen_pos| {
+                let mut new_board = board.clone();
+                new_board.add_queen(new_queen_pos);
+                check_board(new_board);
+                unimplemented!();
+            });
+        }
+
         unimplemented!();
     }
 
