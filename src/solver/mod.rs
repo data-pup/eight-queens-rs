@@ -1,4 +1,4 @@
-use std::collections::BinaryHeap;
+use std::collections::{BinaryHeap, HashSet};
 
 mod update_visited;
 
@@ -13,16 +13,18 @@ pub fn get_solution() {
 /// This struct is used to find solutions to the problem, given a board state.
 #[derive(Clone, Debug)]
 pub struct Solver {
-    _curr_board: Board,
-    _soln_state: CheckResult,
+    _state_heap: BinaryHeap<CoordList>,
+    _visited: HashSet<CoordList>,
+    _solutions: HashSet<CoordList>,
 }
 
 impl Solver {
     /// Create a new solver object.
     pub fn new(board: Board) -> Solver {
         Solver {
-            _curr_board: board.clone(),
-            _soln_state: check_board(board),
+            _state_heap: BinaryHeap::new(),
+            _visited: HashSet::new(),
+            _solutions: HashSet::new(),
         }
     }
 
@@ -55,19 +57,20 @@ impl Solver {
 impl Solutions for Solver {
     /// Calculate solutions to the problem.
     fn get_solutions(&self) -> Option<Vec<Vec<PosCoords>>> {
-        if self._soln_state.has_conflict {
-            None
-        } else if self._soln_state.is_solved {
-            let soln = vec![self._curr_board.get_queen_positions()];
-            Some(soln)
-        } else {
-            let solns = self._get_next_moves()
-                .iter()
-                .filter_map(|next_move| next_move.get_solutions())
-                .flatten()
-                .collect::<Vec<Vec<PosCoords>>>();
-            Some(solns)
-        }
+        unimplemented!();
+        // if self._soln_state.has_conflict {
+        //     None
+        // } else if self._soln_state.is_solved {
+        //     let soln = vec![self._curr_board.get_queen_positions()];
+        //     Some(soln)
+        // } else {
+        //     let solns = self._get_next_moves()
+        //         .iter()
+        //         .filter_map(|next_move| next_move.get_solutions())
+        //         .flatten()
+        //         .collect::<Vec<Vec<PosCoords>>>();
+        //     Some(solns)
+        // }
     }
 }
 
