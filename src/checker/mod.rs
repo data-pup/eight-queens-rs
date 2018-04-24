@@ -1,8 +1,8 @@
 mod board_has_conflict;
 mod check_result;
 
-pub use self::check_result::CheckResult;
 use self::board_has_conflict::board_has_conflict;
+pub use self::check_result::CheckResult;
 
 use Board;
 

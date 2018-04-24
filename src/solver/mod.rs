@@ -1,22 +1,20 @@
-mod solution_state;
-use self::solution_state::SolutionState;
-
-use board::Board;
+use checker::{check_board, CheckResult};
+use Board;
 use {CoordSet, Queens, Solutions};
 
 /// This struct is used to find solutions to the problem, given a board state.
 #[derive(Clone, Debug)]
 pub struct Solver {
     _curr_board: Board,
-    _soln_state: SolutionState,
+    _soln_state: CheckResult,
 }
 
 impl Solver {
     /// Create a new solver object.
-    pub fn new(b: Board) -> Solver {
+    pub fn new(board: Board) -> Solver {
         Solver {
-            _curr_board: b.clone(),
-            _soln_state: SolutionState::from(b),
+            _curr_board: board.clone(),
+            _soln_state: check_board(board),
         }
     }
 
