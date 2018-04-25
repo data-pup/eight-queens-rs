@@ -41,12 +41,15 @@ impl Solver {
     /// calculate the next possible moves.
     pub fn _tick(&mut self) {
         if let Some(queen_positions) = self._state_heap.pop() {
+            // FIXUP: Check if queen_positions can be a solution.
+            //        If so, check solution validity, otherwise get next moves.
             let board = queen_positions.iter().cloned().collect::<Board>();
             let contested: HashSet<PosCoords> =
                 get_contested_spaces(queen_positions, self._dimensions)
                     .iter()
                     .cloned()
                     .collect();
+            // FIXUP: Create CoordIter from coord, not board.
             let uncontested: HashSet<PosCoords> = CoordIter::from(board.clone())
                 .filter(|pos| !contested.contains(pos))
                 .collect();
@@ -55,12 +58,17 @@ impl Solver {
                 .map(|new_queen_pos| {
                     let mut new_board = board.clone();
                     new_board.add_queen(new_queen_pos);
-                    check_board(new_board)
+                    let queen_positions = new_board.get_queen_positions();
+                    self._visited.insert(queen_positions.clone());
+                    let check_result = check_board(new_board);
+                    (queen_positions, check_result)
                 })
-                .collect::<Vec<CheckResult>>();
+                .collect::<Vec<(Vec<PosCoords>, CheckResult)>>();
+            let next_5_best_moves = _move_checks.into_iter().rev().take(5).map(|(pos_vec, _)| pos_vec);
+            self._state_heap.extend(next_5_best_moves);
+            // FIXUP: Add reflections / state to visited.
+            // FIXUP: Check result sorting? This may need to use sort_by_key etc.
         }
-
-        unimplemented!();
     }
 
     pub fn solve(&mut self) -> HashSet<CoordList> {
@@ -72,7 +80,7 @@ impl Solver {
 }
 
 #[cfg(test)]
-mod get_next_moves_bench {
+mod tick_bench {
     extern crate rand;
     extern crate test;
     use self::test::Bencher;
@@ -85,7 +93,7 @@ mod get_next_moves_bench {
         let b = Board::new();
         let mut s = Solver::new(b);
         bencher.iter(|| {
-            let _ = s.solve();
+            let _ = s._tick();
         });
     }
 
@@ -94,7 +102,7 @@ mod get_next_moves_bench {
         let b: Board = get_n_random_coords(2).into_iter().collect();
         let mut s = Solver::new(b);
         bencher.iter(|| {
-            let _ = s.solve();
+            let _ = s._tick();
         });
     }
 
@@ -103,7 +111,7 @@ mod get_next_moves_bench {
         let b: Board = get_n_random_coords(4).into_iter().collect();
         let mut s = Solver::new(b);
         bencher.iter(|| {
-            let _ = s.solve();
+            let _ = s._tick();
         });
     }
 
@@ -112,7 +120,7 @@ mod get_next_moves_bench {
         let b: Board = get_n_random_coords(7).into_iter().collect();
         let mut s = Solver::new(b);
         bencher.iter(|| {
-            let _ = s.solve();
+            let _ = s._tick();
         });
     }
 
@@ -128,37 +136,38 @@ mod get_next_moves_bench {
     }
 }
 
-// #[cfg(test)]
-// mod solve_tests {
-//     use super::Solver;
-//     use {Board, CoordList};
-//     /// Test the `solve` method, starting at a position with 7 queens
-//     /// on the board. One queen placed at (5, 7) will solve the problem.
-//     #[test]
-//     fn test_correct_solution_is_found_for_7_queen_pos() {
-//         let b: Board = [(2, 0), (4, 1), (1, 2), (7, 3), (0, 4), (6, 5), (3, 6)]
-//             .iter()
-//             .cloned()
-//             .collect();
-//         let mut solver = Solver::new(b);
-//         let soln_set = solver.solve().unwrap();
-//         let expected_soln_coords: Vec<CoordList> = vec![
-//             [
-//                 (2, 0),
-//                 (4, 1),
-//                 (1, 2),
-//                 (7, 3),
-//                 (0, 4),
-//                 (6, 5),
-//                 (3, 6),
-//                 (5, 7),
-//             ].iter()
-//                 .cloned()
-//                 .collect(),
-//         ];
-//         assert_eq!(soln_set, expected_soln_coords);
-//     }
-// }
+#[cfg(test)]
+mod solve_tests {
+    use super::Solver;
+    use {Board, CoordList};
+    use std::collections::HashSet;
+    /// Test the `solve` method, starting at a position with 7 queens
+    /// on the board. One queen placed at (5, 7) will solve the problem.
+    #[test]
+    fn test_correct_solution_is_found_for_7_queen_pos() {
+        let b: Board = [(2, 0), (4, 1), (1, 2), (7, 3), (0, 4), (6, 5), (3, 6)]
+            .iter()
+            .cloned()
+            .collect();
+        let mut solver = Solver::new(b);
+        let soln_set = solver.solve();
+        let expected_soln_coords: HashSet<CoordList> = vec![
+            [
+                (2, 0),
+                (4, 1),
+                (1, 2),
+                (7, 3),
+                (0, 4),
+                (6, 5),
+                (3, 6),
+                (5, 7),
+            ].iter().cloned().collect::<CoordList>()
+        ].iter()
+            .cloned()
+            .collect();
+        assert_eq!(soln_set, expected_soln_coords);
+    }
+}
 
 #[cfg(test)]
 mod solve_benches {
@@ -220,14 +229,14 @@ mod solve_benches {
         });
     }
 
-    #[bench]
-    fn time_get_solution_from_3_queen_pos(bencher: &mut Bencher) {
-        let b: Board = [(2, 0), (4, 1), (1, 2)].iter().cloned().collect();
-        let mut solver = Solver::new(b);
-        bencher.iter(|| {
-            solver.solve();
-        });
-    }
+    // #[bench]
+    // fn time_get_solution_from_3_queen_pos(bencher: &mut Bencher) {
+    //     let b: Board = [(2, 0), (4, 1), (1, 2)].iter().cloned().collect();
+    //     let mut solver = Solver::new(b);
+    //     bencher.iter(|| {
+    //         solver.solve();
+    //     });
+    // }
 
     // #[bench]
     // fn time_get_solution_from_empty_board(bencher: &mut Bencher) {
