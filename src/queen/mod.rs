@@ -92,7 +92,6 @@ fn get_se_moves(pos: PosCoords, dims: PosCoords) -> Vec<PosCoords> {
 mod queens_tests {
     use super::{get_contested_spaces, get_queen_moves};
     use position_types::*;
-    use std::collections::HashSet;
     use Board;
 
     #[test]

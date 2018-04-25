@@ -12,7 +12,6 @@ mod check_result_ordering_test {
     extern crate rand;
     use super::CheckResult;
     use rand::Rng;
-    use std::cmp::Ordering;
 
     #[test]
     fn solution_is_gt_than_default() {
@@ -40,7 +39,7 @@ mod check_result_ordering_test {
             create_solution_result(),
         ];
         let expected = input.clone();
-        for i in 0..num_trials {
+        for _ in 0..num_trials {
             rng.shuffle(&mut input);
             input.sort();
             assert_eq!(input, expected);

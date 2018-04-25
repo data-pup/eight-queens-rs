@@ -34,14 +34,12 @@ impl Solver {
         self._state_heap.is_empty()
     }
 
-    /// Create a vector of the next possible moves.
+    /// Tick the solver forward one iteration. Attempt to pop an item off of
+    /// the state heap, and check if it is a solution. If it is a solution,
+    /// add it (and its reflections) to the solutions set. If it is not a
+    /// solution, add it (and its reflections) to the visited set, then
+    /// calculate the next possible moves.
     pub fn _tick(&mut self) {
-        // TODO:
-        // ?. Add the current position list, and its reflections, to some cache.
-        // 1. Get the uncontested spaces on the board.
-        // 2. Map the uncontested spaces into solution check results.
-        // 3. Sort them descending according to which has the most free spaces.
-        // 4. Take (n) next moves, and get the solutions for those states.
         if let Some(queen_positions) = self._state_heap.pop() {
             let board = queen_positions.iter().cloned().collect::<Board>();
             let contested: HashSet<PosCoords> =
@@ -52,11 +50,14 @@ impl Solver {
             let uncontested: HashSet<PosCoords> = CoordIter::from(board.clone())
                 .filter(|pos| !contested.contains(pos))
                 .collect();
-            let move_checks = uncontested.into_iter().map(|new_queen_pos| {
-                let mut new_board = board.clone();
-                new_board.add_queen(new_queen_pos);
-                check_board(new_board)
-            });
+            let _move_checks = uncontested
+                .into_iter()
+                .map(|new_queen_pos| {
+                    let mut new_board = board.clone();
+                    new_board.add_queen(new_queen_pos);
+                    check_board(new_board)
+                })
+                .collect::<Vec<CheckResult>>();
         }
 
         unimplemented!();
