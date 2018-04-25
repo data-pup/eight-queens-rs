@@ -33,19 +33,13 @@ mod check_result_ordering_test {
         let mut rng = rand::thread_rng();
         let num_trials = 100;
         let mut input = vec![
-            create_partial_solution_4_queens_30_free(),
             create_default_board_check_result(),
             create_partial_solution_2_queens(),
+            create_partial_solution_4_queens_30_free(),
             create_partial_solution_4_queens_50_free(),
             create_solution_result(),
         ];
-        let expected = vec![
-            create_solution_result(),
-            create_partial_solution_4_queens_50_free(),
-            create_partial_solution_4_queens_30_free(),
-            create_partial_solution_2_queens(),
-            create_default_board_check_result(),
-        ];
+        let expected = input.clone();
         for i in 0..num_trials {
             rng.shuffle(&mut input);
             input.sort();
