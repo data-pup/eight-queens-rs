@@ -65,7 +65,11 @@ impl Solver {
                     (queen_positions, check_result)
                 })
                 .collect::<Vec<(Vec<PosCoords>, CheckResult)>>();
-            let next_5_best_moves = _move_checks.into_iter().rev().take(5).map(|(pos_vec, _)| pos_vec);
+            let next_5_best_moves = _move_checks
+                .into_iter()
+                .rev()
+                .take(5)
+                .map(|(pos_vec, _)| pos_vec);
             self._state_heap.extend(next_5_best_moves);
             // FIXUP: Add reflections / state to visited.
             // FIXUP: Check result sorting? This may need to use sort_by_key etc.
@@ -140,8 +144,8 @@ mod tick_bench {
 #[cfg(test)]
 mod solve_tests {
     use super::Solver;
-    use {Board, CoordList};
     use std::collections::HashSet;
+    use {Board, CoordList};
     /// Test the `solve` method, starting at a position with 7 queens
     /// on the board. One queen placed at (5, 7) will solve the problem.
     #[test]
@@ -162,7 +166,9 @@ mod solve_tests {
                 (6, 5),
                 (3, 6),
                 (5, 7),
-            ].iter().cloned().collect::<CoordList>()
+            ].iter()
+                .cloned()
+                .collect::<CoordList>(),
         ].iter()
             .cloned()
             .collect();
