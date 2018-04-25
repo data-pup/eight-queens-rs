@@ -55,8 +55,7 @@ impl Solver {
             let move_checks = uncontested.into_iter().map(|new_queen_pos| {
                 let mut new_board = board.clone();
                 new_board.add_queen(new_queen_pos);
-                check_board(new_board);
-                unimplemented!();
+                check_board(new_board)
             });
         }
 
