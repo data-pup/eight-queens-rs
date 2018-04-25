@@ -19,6 +19,7 @@ pub struct Solver {
 impl Solver {
     /// Create a new solver object.
     pub fn new(board: Board) -> Solver {
+        // FIXUP: Add the initial state to the visited set.
         let mut _state_heap = BinaryHeap::new();
         _state_heap.push(vec![]);
         Solver {
