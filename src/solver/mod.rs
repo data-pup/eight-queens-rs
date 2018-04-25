@@ -50,38 +50,14 @@ impl Solver {
             let board = queen_positions.iter().cloned().collect::<Board>();
             self.add_state_and_reflections_to_visited(&board);
             let state_check = check_board(board.clone());
-
             if state_check.is_solved {
                 // FIXUP: Add reflections of solution as well.
                 self._solutions.insert(queen_positions);
                 return;
-            } // FIXUP: Refactor code below into a helper function.
-            let contested: HashSet<PosCoords> =
-                get_contested_spaces(queen_positions, self._dimensions)
-                    .iter()
-                    .cloned()
-                    .collect();
-            // FIXUP: Create CoordIter from coord, not board.
-            let uncontested: HashSet<PosCoords> = CoordIter::from(board.clone())
-                .filter(|pos| !contested.contains(pos))
-                .collect();
-            let _move_checks = uncontested
-                .into_iter()
-                .map(|new_queen_pos| {
-                    let mut new_board = board.clone();
-                    new_board.add_queen(new_queen_pos);
-                    let queen_positions = new_board.get_queen_positions();
-                    self._visited.insert(queen_positions.clone());
-                    let check_result = check_board(new_board);
-                    (queen_positions, check_result)
-                })
-                .collect::<Vec<(Vec<PosCoords>, CheckResult)>>();
-            let next_5_best_moves = _move_checks
-                .into_iter()
-                .rev()
-                .take(20)
-                .map(|(pos_vec, _)| pos_vec);
-            self._state_heap.extend(next_5_best_moves);
+            } else {
+                let next_best_moves = self.get_next_moves(queen_positions);
+                self._state_heap.extend(next_best_moves);
+            }
             // FIXUP: Add reflections / state to visited.
             // FIXUP: Check result sorting? This may need to use sort_by_key etc.
         }
@@ -92,6 +68,37 @@ impl Solver {
             self._tick();
         }
         self._solutions.clone()
+    }
+
+    fn get_next_moves(&self, queen_positions: CoordList) -> Vec<CoordList> {
+        let board = queen_positions.iter().cloned().collect::<Board>();
+        let contested: HashSet<PosCoords> =
+            get_contested_spaces(queen_positions, self._dimensions)
+                .iter()
+                .cloned()
+                .collect();
+        let uncontested: HashSet<PosCoords> = CoordIter::from(board.clone())
+            .filter(|pos| !contested.contains(pos))
+            .collect();
+        let mut _move_checks = uncontested
+            .into_iter()
+            .map(|new_queen_pos| {
+                let mut new_board = board.clone();
+                new_board.add_queen(new_queen_pos);
+                let queen_positions = new_board.get_queen_positions();
+                // self._visited.insert(queen_positions.clone()); // FIXUP (Move elsewhere).
+                let check_result = check_board(new_board);
+                (queen_positions, check_result)
+            })
+            .collect::<Vec<(Vec<PosCoords>, CheckResult)>>();
+        _move_checks.sort_by_key(|elem| elem.1.clone());
+        let next_best_moves = _move_checks
+            .into_iter()
+            .rev()
+            .take(20)
+            .map(|(pos_vec, _)| pos_vec)
+            .collect();
+        next_best_moves
     }
 
     fn add_state_and_reflections_to_visited(&mut self, board: &Board) {
