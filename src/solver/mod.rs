@@ -10,9 +10,9 @@ use {Board, CoordList, PosCoords, Reflection};
 /// This struct is used to find solutions to the problem, given a board state.
 #[derive(Clone, Debug)]
 pub struct Solver {
+    _solutions: HashSet<CoordList>,
     _state_heap: BinaryHeap<CoordList>, // FIXUP: This should be sorted on check result.
     _visited: HashSet<CoordList>,
-    _solutions: HashSet<CoordList>,
     _dimensions: PosCoords,
 }
 
@@ -22,15 +22,12 @@ impl Solver {
         let initial_queen_positions = board.get_queen_positions();
         let mut _state_heap = BinaryHeap::new();
         _state_heap.push(initial_queen_positions.clone());
-        let mut _visited = HashSet::new();
-        _visited.insert(initial_queen_positions);
-        let _dimensions = board.dims();
-        let _solutions = HashSet::new();
+
         Solver {
             _state_heap,
-            _visited,
-            _solutions,
-            _dimensions,
+            _visited: HashSet::new(),
+            _solutions: HashSet::new(),
+            _dimensions: board.dims(),
         }
     }
 
