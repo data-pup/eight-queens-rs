@@ -34,6 +34,11 @@ impl Solver {
         self._state_heap.is_empty()
     }
 
+    /// Returns true if the solver has found at least one solution.
+    pub fn solution_exists(&self) -> bool {
+        !self._solutions.is_empty()
+    }
+
     /// Tick the solver forward one iteration. Attempt to pop an item off of
     /// the state heap, and check if it is a solution. If it is a solution,
     /// add it (and its reflections) to the solutions set. If it is not a
