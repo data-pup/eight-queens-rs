@@ -138,8 +138,7 @@ mod tick_bench {
 
     #[bench]
     fn time_tick_for_empty_board(bencher: &mut Bencher) {
-        let b = Board::new();
-        let mut s = Solver::from(b);
+        let mut s = Solver::new();
         bencher.iter(|| {
             let _ = s._tick();
         });
@@ -290,8 +289,7 @@ mod solve_benches {
 
     // #[bench]
     // fn time_get_solution_from_empty_board(bencher: &mut Bencher) {
-    //     let b: Board = Board::new();
-    //     let mut solver = Solver::new(b);
+    //     let mut solver = Solver::new();
     //     bencher.iter(|| {
     //         solver.solve();
     //     });
