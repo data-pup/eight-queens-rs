@@ -77,7 +77,7 @@ impl Solver {
                 .iter()
                 .cloned()
                 .collect();
-        let uncontested: HashSet<PosCoords> = CoordIter::from(board.clone())
+        let uncontested: HashSet<PosCoords> = CoordIter::from(board.dims())
             .filter(|pos| !contested.contains(pos))
             .collect();
         let mut _move_checks = uncontested

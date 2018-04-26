@@ -1,4 +1,4 @@
-use {Board, PosCoords};
+use PosCoords;
 
 pub struct CoordIter {
     height: u32,
@@ -7,10 +7,12 @@ pub struct CoordIter {
 }
 
 impl CoordIter {
+    /// Returns true if the iterator is still in bounds.
     fn in_bounds(&self) -> bool {
         self.curr_i < self.width * self.height
     }
 
+    /// Returns the current position coordinates.
     fn curr_pos(&self) -> PosCoords {
         let y = self.curr_i / self.width;
         let x = self.curr_i % self.width;
@@ -18,9 +20,10 @@ impl CoordIter {
     }
 }
 
-impl From<Board> for CoordIter {
-    fn from(board: Board) -> CoordIter {
-        let (width, height) = board.dims();
+// Create a coordinate space iterator using given dimensions.
+impl From<PosCoords> for CoordIter {
+    fn from(dims: PosCoords) -> CoordIter {
+        let (width, height) = dims;
         CoordIter {
             height,
             width,
@@ -29,6 +32,7 @@ impl From<Board> for CoordIter {
     }
 }
 
+// Implement the iterator trait for the coordinate iterator object.
 impl Iterator for CoordIter {
     type Item = PosCoords;
     fn next(&mut self) -> Option<Self::Item> {
@@ -46,11 +50,11 @@ impl Iterator for CoordIter {
 #[cfg(test)]
 mod coord_iter_tests {
     use super::CoordIter;
-    use {Board, PosCoords};
+    use PosCoords;
 
     #[test]
-    fn coord_iter_can_be_created_from_board() {
-        let coord_iter = CoordIter::from(Board::new());
+    fn coord_iter_can_be_created_from_dims() {
+        let coord_iter = CoordIter::from((8, 8));
         assert_eq!(coord_iter.height, 8);
         assert_eq!(coord_iter.width, 8);
         assert_eq!(coord_iter.curr_i, 0);
@@ -59,8 +63,7 @@ mod coord_iter_tests {
     #[test]
     fn iterating_3_by_3_space_works() {
         let dims = (3, 3);
-        let board = Board::from(dims);
-        let coord_iter = CoordIter::from(board);
+        let coord_iter = CoordIter::from(dims);
         let coords = coord_iter.collect::<Vec<PosCoords>>();
         let expected = vec![
             (0, 0),
@@ -83,7 +86,7 @@ mod coord_iter_benches {
 
     use self::test::Bencher;
     use super::CoordIter;
-    use {Board, PosCoords};
+    use PosCoords;
 
     #[bench]
     fn time_collection_of_3_by_3_coord_space(bencher: &mut Bencher) {
@@ -99,8 +102,7 @@ mod coord_iter_benches {
 
     fn collect_coord_space(width: u32, height: u32) -> Vec<PosCoords> {
         let dims = (width, height);
-        let board = Board::from(dims);
-        let coord_iter = CoordIter::from(board);
+        let coord_iter = CoordIter::from(dims);
         coord_iter.collect()
     }
 }
