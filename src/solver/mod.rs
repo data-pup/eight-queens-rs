@@ -17,17 +17,15 @@ pub struct Solver {
 }
 
 impl Solver {
-    /// Create a new solver object.
-    pub fn new(board: Board) -> Solver {
-        let initial_queen_positions = board.get_queen_positions();
+    // Create a new solver object.
+    pub fn new() -> Solver {
         let mut _state_heap = BinaryHeap::new();
-        _state_heap.push(initial_queen_positions.clone());
-
+        _state_heap.push(vec![]);
         Solver {
             _state_heap,
             _visited: HashSet::new(),
             _solutions: HashSet::new(),
-            _dimensions: board.dims(),
+            _dimensions: (8, 8),
         }
     }
 
@@ -116,6 +114,19 @@ impl Solver {
     }
 }
 
+impl From<Board> for Solver {
+    fn from(board: Board) -> Solver {
+        let mut _state_heap = BinaryHeap::new();
+        _state_heap.push(board.get_queen_positions());
+        Solver {
+            _state_heap,
+            _visited: HashSet::new(),
+            _solutions: HashSet::new(),
+            _dimensions: board.dims(),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tick_bench {
     extern crate rand;
@@ -126,36 +137,36 @@ mod tick_bench {
     use {Board, PosCoords};
 
     #[bench]
-    fn time_get_next_moves_for_empty_board(bencher: &mut Bencher) {
+    fn time_tick_for_empty_board(bencher: &mut Bencher) {
         let b = Board::new();
-        let mut s = Solver::new(b);
+        let mut s = Solver::from(b);
         bencher.iter(|| {
             let _ = s._tick();
         });
     }
 
     #[bench]
-    fn time_get_next_moves_for_board_with_two_queens(bencher: &mut Bencher) {
+    fn time_tick_for_board_with_two_queens(bencher: &mut Bencher) {
         let b: Board = get_n_random_coords(2).into_iter().collect();
-        let mut s = Solver::new(b);
+        let mut s = Solver::from(b);
         bencher.iter(|| {
             let _ = s._tick();
         });
     }
 
     #[bench]
-    fn time_get_next_moves_for_board_with_four_queens(bencher: &mut Bencher) {
+    fn time_tick_for_board_with_four_queens(bencher: &mut Bencher) {
         let b: Board = get_n_random_coords(4).into_iter().collect();
-        let mut s = Solver::new(b);
+        let mut s = Solver::from(b);
         bencher.iter(|| {
             let _ = s._tick();
         });
     }
 
     #[bench]
-    fn time_get_next_moves_for_board_with_seven_queens(bencher: &mut Bencher) {
+    fn time_tick_for_board_with_seven_queens(bencher: &mut Bencher) {
         let b: Board = get_n_random_coords(7).into_iter().collect();
-        let mut s = Solver::new(b);
+        let mut s = Solver::from(b);
         bencher.iter(|| {
             let _ = s._tick();
         });
@@ -186,7 +197,7 @@ mod solve_tests {
             .iter()
             .cloned()
             .collect();
-        let mut solver = Solver::new(b);
+        let mut solver = Solver::from(b);
         let soln_set = solver.solve();
         let expected_soln_coords: HashSet<CoordList> = vec![
             [
@@ -235,7 +246,7 @@ mod solve_benches {
             .iter()
             .cloned()
             .collect();
-        let mut solver = Solver::new(b);
+        let mut solver = Solver::from(b);
         bencher.iter(|| {
             solver.solve();
         });
@@ -262,7 +273,7 @@ mod solve_benches {
             .iter()
             .cloned()
             .collect();
-        let mut solver = Solver::new(b);
+        let mut solver = Solver::from(b);
         bencher.iter(|| {
             solver.solve();
         });
@@ -271,7 +282,7 @@ mod solve_benches {
     #[bench]
     fn time_get_solution_from_3_queen_pos(bencher: &mut Bencher) {
         let b: Board = [(2, 0), (4, 1), (1, 2)].iter().cloned().collect();
-        let mut solver = Solver::new(b);
+        let mut solver = Solver::from(b);
         bencher.iter(|| {
             solver.solve();
         });
