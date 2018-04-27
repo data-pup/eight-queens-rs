@@ -18,10 +18,3 @@ pub enum Square {
     Empty = 0,
     Queen = 1,
 }
-
-/// This trait is used to identify reflections of a given state.
-pub trait Reflection {
-    fn get_horizontal_reflection(&self) -> CoordList;
-    fn get_vertical_reflection(&self) -> CoordList;
-    fn get_inverse(&self) -> CoordList;
-}

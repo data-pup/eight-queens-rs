@@ -1,18 +1,16 @@
 use std::collections::{BinaryHeap, HashSet};
 
-mod update_visited;
-
 use checker::{check_board, CheckResult};
 use position::CoordIter;
 use queen::get_contested_spaces;
-use {Board, CoordList, PosCoords, Reflection};
+use {Board, CoordList, PosCoords};
 
 /// This struct is used to find solutions to the problem, given a board state.
 #[derive(Clone, Debug)]
 pub struct Solver {
     _solutions: HashSet<CoordList>,
     _state_heap: BinaryHeap<CoordList>, // FIXUP: This should be sorted on check result.
-    _visited: HashSet<CoordList>,
+    _visited: HashSet<Board>,
     _dimensions: PosCoords,
 }
 
@@ -72,11 +70,10 @@ impl Solver {
 
     fn get_next_moves(&self, queen_positions: CoordList) -> Vec<CoordList> {
         let board = queen_positions.iter().cloned().collect::<Board>();
-        let contested: HashSet<PosCoords> =
-            get_contested_spaces(queen_positions, self._dimensions)
-                .iter()
-                .cloned()
-                .collect();
+        let contested: HashSet<PosCoords> = get_contested_spaces(queen_positions, self._dimensions)
+            .iter()
+            .cloned()
+            .collect();
         let uncontested: HashSet<PosCoords> = CoordIter::from(board.dims())
             .filter(|pos| !contested.contains(pos))
             .collect();
@@ -102,20 +99,10 @@ impl Solver {
     }
 
     fn add_state_and_reflections_to_visited(&mut self, board: &Board) {
-        self._visited.insert(board.get_queen_positions());
-        Solver::get_reflections(board)
-            .into_iter()
-            .for_each(|coords| {
-                self._visited.insert(coords);
-            });
-    }
-
-    fn get_reflections(board: &Reflection) -> Vec<CoordList> {
-        vec![
-            board.get_horizontal_reflection(),
-            board.get_vertical_reflection(),
-            board.get_inverse(),
-        ]
+        self._visited.insert(board.clone());
+        board.get_reflections().into_iter().for_each(|board| {
+            self._visited.insert(board);
+        });
     }
 }
 

@@ -1,41 +1,54 @@
-use {Board, CoordList, PosCoords, Reflection};
+use {Board, PosCoords};
 
-impl Reflection for Board {
-    fn get_horizontal_reflection(&self) -> CoordList {
-        self.get_queen_positions()
+impl Board {
+    /// Return a vector of Boards representing reflections of the current state.
+    pub fn get_reflections(&self) -> Vec<Board> {
+        vec![
+            self.get_horizontal_reflection(),
+            self.get_vertical_reflection(),
+            self.get_inverse(),
+        ]
+    }
+
+    /// Reflect the board horizontally on the y-axis.
+    fn get_horizontal_reflection(&self) -> Board {
+        self.queens
             .iter()
             .map(|pos| self.get_pos_horizontal_reflection(pos))
             .collect()
     }
 
-    fn get_vertical_reflection(&self) -> CoordList {
-        self.get_queen_positions()
+    /// Reflect the board vertically on the y-axis.
+    fn get_vertical_reflection(&self) -> Board {
+        self.queens
             .iter()
             .map(|pos| self.get_pos_vertical_reflection(pos))
             .collect()
     }
 
-    fn get_inverse(&self) -> CoordList {
-        self.get_queen_positions()
+    /// Reflect the board on both axes.
+    fn get_inverse(&self) -> Board {
+        self.queens
             .iter()
             .map(|pos| self.get_pos_inverse(pos))
             .collect()
     }
-}
 
-impl Board {
+    /// Reflect a position horizontally on the x-axis.
     fn get_pos_horizontal_reflection(&self, pos: &PosCoords) -> PosCoords {
         let &(orig_x, y) = pos;
         let new_x = self.width - orig_x - 1;
         (new_x, y)
     }
 
+    /// Reflect a position vertically on the y-axis.
     fn get_pos_vertical_reflection(&self, pos: &PosCoords) -> PosCoords {
         let &(x, orig_y) = pos;
         let new_y = self.height - orig_y - 1;
         (x, new_y)
     }
 
+    /// Reflect a position vertically and horizontally.
     fn get_pos_inverse(&self, pos: &PosCoords) -> PosCoords {
         let &(orig_x, orig_y) = pos;
         let new_y = self.height - orig_y - 1;

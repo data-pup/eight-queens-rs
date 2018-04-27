@@ -6,7 +6,7 @@ mod board_from_pos_iter;
 mod board_reflect;
 mod board_to_string;
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
 pub struct Board {
     width: u32,
     height: u32,
