@@ -61,6 +61,13 @@ impl Solver {
         }
     }
 
+    pub fn get_next_solution(&mut self) {
+        let initial_soln_count = self._solutions.len();
+        while self._solutions.len() == initial_soln_count {
+            self._tick();
+        }
+    }
+
     pub fn solve(&mut self) -> HashSet<CoordList> {
         while !self.is_done() {
             self._tick();
@@ -129,11 +136,45 @@ mod tick_bench {
     use {Board, PosCoords};
 
     #[bench]
-    fn time_tick_for_empty_board(bencher: &mut Bencher) {
+    fn time_1_tick_for_empty_board(bencher: &mut Bencher) {
         let mut s = Solver::new();
-        bencher.iter(|| {
-            let _ = s._tick();
-        });
+        bencher.iter(|| tick_n_times(&mut s, 1));
+    }
+
+    #[bench]
+    fn time_2_tick_for_empty_board(bencher: &mut Bencher) {
+        let mut s = Solver::new();
+        bencher.iter(|| tick_n_times(&mut s, 2));
+    }
+
+    #[bench]
+    fn time_4_tick_for_empty_board(bencher: &mut Bencher) {
+        let mut s = Solver::new();
+        bencher.iter(|| tick_n_times(&mut s, 4));
+    }
+
+    #[bench]
+    fn time_8_tick_for_empty_board(bencher: &mut Bencher) {
+        let mut s = Solver::new();
+        bencher.iter(|| tick_n_times(&mut s, 8));
+    }
+
+    #[bench]
+    fn time_32_tick_for_empty_board(bencher: &mut Bencher) {
+        let mut s = Solver::new();
+        bencher.iter(|| tick_n_times(&mut s, 32));
+    }
+
+    #[bench]
+    fn time_256_tick_for_empty_board(bencher: &mut Bencher) {
+        let mut s = Solver::new();
+        bencher.iter(|| tick_n_times(&mut s, 256));
+    }
+
+    #[bench]
+    fn time_1024_tick_for_empty_board(bencher: &mut Bencher) {
+        let mut s = Solver::new();
+        bencher.iter(|| tick_n_times(&mut s, 1024));
     }
 
     #[bench]
@@ -173,7 +214,34 @@ mod tick_bench {
         let y_coords: Vec<u32> = y_range.into_iter().take(n).collect();
         (0..n).map(|i| (x_coords[i], y_coords[i])).collect()
     }
+
+    fn tick_n_times(solver: &mut Solver, n: u32) {
+        for _ in 0..n {
+            solver._tick();
+        }
+    }
 }
+
+// #[cfg(test)]
+// mod get_next_solutions_tests {
+//     extern crate test;
+//     use self::test::Bencher;
+//     use super::Solver;
+
+//     #[bench]
+//     fn time_until_1_solution(bencher: &mut Bencher) {
+//         let mut s = Solver::new();
+//         bencher.iter(|| {
+//             get_n_solutions(&mut s, 1);
+//         });
+//     }
+
+//     fn get_n_solutions(solver: &mut Solver, n: u32) {
+//         for _ in 0..n {
+//             solver.get_next_solution();
+//         }
+//     }
+// }
 
 #[cfg(test)]
 mod solve_tests {
