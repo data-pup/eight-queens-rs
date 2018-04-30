@@ -5,20 +5,69 @@ eight queen problem. This works somewhat acceptably for a starting
 position that has some preexisting queens on the board, but finding
 a solution starting from an empty board takes far too long.
 
-So, this represented a chance to think further about the implementation
-of the solution calculation algorithm. This is not performant, and involves
-checking just about every possible move, with no regard for transpositions and
-reflections. We'll return to those ideas, but let's start by reviewing
-the code that I was starting with.
+This meant that I needed to rethink some details regarding the calculation
+process, and see what I could change to fix this.
 
-## No Move Filtering, Sorted Stack
+__Original Benchmark Results__:
 
 ```
-test solver::tick_bench::time_1024_tick_for_empty_board                                                              ... bench:  30,921,964 ns/iter (+/- 11,566,868)
-test solver::tick_bench::time_1_tick_for_empty_board                                                                 ... bench:      33,073 ns/iter (+/- 16,046)
-test solver::tick_bench::time_256_tick_for_empty_board                                                               ... bench:   7,887,655 ns/iter (+/- 4,023,964)
-test solver::tick_bench::time_2_tick_for_empty_board                                                                 ... bench:      64,001 ns/iter (+/- 27,435)
-test solver::tick_bench::time_32_tick_for_empty_board                                                                ... bench:   1,063,062 ns/iter (+/- 611,156)
-test solver::tick_bench::time_4_tick_for_empty_board                                                                 ... bench:     134,302 ns/iter (+/- 54,118)
-test solver::tick_bench::time_8_tick_for_empty_board                                                                 ... bench:     264,169 ns/iter (+/- 147,700)
+test solver::tick_bench::time_1_tick_for_empty_board ... bench:     33,073 ns/iter (+/- 16,046)
+test solver::tick_bench::time_2_tick_for_empty_board ... bench:     64,001 ns/iter (+/- 27,435)
+test solver::tick_bench::time_4_tick_for_empty_board ... bench:     134,302 ns/iter (+/- 54,118)
+test solver::tick_bench::time_8_tick_for_empty_board ... bench:     264,169 ns/iter (+/- 147,700)
+test solver::tick_bench::time_32_tick_for_empty_board ... bench:    1,063,062 ns/iter (+/- 611,156)
+test solver::tick_bench::time_256_tick_for_empty_board ... bench:   7,887,655 ns/iter (+/- 4,023,964)
+test solver::tick_bench::time_1024_tick_for_empty_board ... bench:  30,921,964 ns/iter (+/- 11,566,868)
 ```
+
+For more information about this, I added some extra benchmarks that would time
+a _single_ tick for the solver, rather than the cummulative time to get to
+a given nth tick. This gave me the following results:
+
+```
+test solver::single_tick_bench::time_256th_tick ... bench:      29,938 ns/iter (+/- 15,252)
+test solver::single_tick_bench::time_32nd_tick ... bench:      32,234 ns/iter (+/- 13,804)
+test solver::single_tick_bench::time_4th_tick ... bench:      31,863 ns/iter (+/- 14,833)
+```
+
+This is interesting, albeit not surprising given the times from the cummulative
+benchmark module. The time for a given tick does not increase in any substantial
+way as the solver progresses. This is good, but also means that in order for
+this to work effectively, we need to improve the performance of a single tick.
+
+Let's look at the process for a single step in the solver's `tick` method.
+
+### Original Tick Implementation
+
+This is the struct definition and `tick` implementation for the benchmarks
+above.
+
+```rust
+pub struct Solver {
+    _solutions: HashSet<CoordList>,
+    _state_heap: BinaryHeap<CoordList>,
+    _visited: HashSet<Board>,
+    _dimensions: PosCoords,
+}
+```
+
+```rust
+pub fn tick(&mut self) {
+    if let Some(queen_positions) = self._state_heap.pop() {
+        let board = queen_positions.iter().cloned().collect::<Board>();
+        self.add_state_and_reflections_to_visited(&board);
+        let state_check = check_board(board.clone());
+        if state_check.is_solved {
+            self._solutions.insert(queen_positions);
+            return;
+        } else {
+            let next_best_moves = self.get_next_moves(queen_positions);
+            self._state_heap.extend(next_best_moves);
+        }
+    }
+}
+```
+
+### Improved Tick Implementation
+
+

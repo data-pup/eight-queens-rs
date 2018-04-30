@@ -9,7 +9,7 @@ use {Board, CoordList, PosCoords};
 #[derive(Clone, Debug)]
 pub struct Solver {
     _solutions: HashSet<CoordList>,
-    _state_heap: BinaryHeap<CoordList>, // FIXUP: This should be sorted on check result.
+    _state_heap: BinaryHeap<CoordList>,
     _visited: HashSet<Board>,
     _dimensions: PosCoords,
 }
@@ -44,7 +44,6 @@ impl Solver {
     /// calculate the next possible moves.
     pub fn _tick(&mut self) {
         if let Some(queen_positions) = self._state_heap.pop() {
-            // FIXUP: Clean up board <-> positions relationship.
             let board = queen_positions.iter().cloned().collect::<Board>();
             self.add_state_and_reflections_to_visited(&board);
             let state_check = check_board(board.clone());
@@ -128,7 +127,7 @@ impl From<Board> for Solver {
 }
 
 #[cfg(test)]
-mod tick_bench {
+mod cummulative_tick_bench {
     extern crate rand;
     extern crate test;
     use self::test::Bencher;
@@ -214,6 +213,47 @@ mod tick_bench {
         let x_coords: Vec<u32> = x_range.into_iter().take(n).collect();
         let y_coords: Vec<u32> = y_range.into_iter().take(n).collect();
         (0..n).map(|i| (x_coords[i], y_coords[i])).collect()
+    }
+
+    fn tick_n_times(solver: &mut Solver, n: u32) {
+        for _ in 0..n {
+            solver._tick();
+        }
+    }
+}
+
+#[cfg(test)]
+mod single_tick_bench {
+    extern crate rand;
+    extern crate test;
+    use self::test::Bencher;
+    use super::Solver;
+
+    #[bench]
+    fn time_4th_tick(bencher: &mut Bencher) {
+        let mut s = Solver::new();
+        tick_n_times(&mut s, 3);
+        bencher.iter(|| {
+            let _ = s._tick();
+        });
+    }
+
+    #[bench]
+    fn time_32nd_tick(bencher: &mut Bencher) {
+        let mut s = Solver::new();
+        tick_n_times(&mut s, 31);
+        bencher.iter(|| {
+            let _ = s._tick();
+        });
+    }
+
+    #[bench]
+    fn time_256th_tick(bencher: &mut Bencher) {
+        let mut s = Solver::new();
+        tick_n_times(&mut s, 255);
+        bencher.iter(|| {
+            let _ = s._tick();
+        });
     }
 
     fn tick_n_times(solver: &mut Solver, n: u32) {
