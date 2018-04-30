@@ -68,6 +68,19 @@ pub fn tick(&mut self) {
 }
 ```
 
+A brief overview of the method is that if we can pop a value off of the state
+heap (meaning that it is not empty), then we progress forward. We collect
+these coordinates into a Board object. Then, we add this board and its
+corresponding reflections to the `visited` hash set of board states.
+
+Next, we check the given state, and consider whether it is a solution or not.
+If we have found a solution, then we should add it to the solutions set. If we
+have not found a solution, then we should find the next available moves, and
+add these to the state heap. Note that this `get_next_moves` method attempts
+to be helpful by filtering out previously visited states, and returning the
+`n` best available moves. (This function was still in flux at the time of
+writing this.)
+
 ### Improved Tick Implementation
 
 The first thing I did was change the `state_heap` member into a `Vec` rather
