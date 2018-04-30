@@ -49,18 +49,16 @@ impl Solver {
             self.add_state_and_reflections_to_visited(&board);
             let state_check = check_board(board.clone());
             if state_check.is_solved {
-                // FIXUP: Add reflections of solution as well.
                 self._solutions.insert(queen_positions);
                 return;
             } else {
                 let next_best_moves = self.get_next_moves(queen_positions);
                 self._state_heap.extend(next_best_moves);
             }
-            // FIXUP: Add reflections / state to visited.
-            // FIXUP: Check result sorting? This may need to use sort_by_key etc.
         }
     }
 
+    /// Progress until the next solution is found.
     pub fn get_next_solution(&mut self) {
         let initial_soln_count = self._solutions.len();
         while self._solutions.len() == initial_soln_count {
@@ -68,6 +66,7 @@ impl Solver {
         }
     }
 
+    /// Find all of the solutions to the eight queen problem.
     pub fn solve(&mut self) -> HashSet<CoordList> {
         while !self.is_done() {
             self._tick();
@@ -75,6 +74,8 @@ impl Solver {
         self._solutions.clone()
     }
 
+    /// Get the next best moves from the board state, given as a list of
+    /// position coordinates.
     fn get_next_moves(&self, queen_positions: CoordList) -> Vec<CoordList> {
         let board = queen_positions.iter().cloned().collect::<Board>();
         let contested: HashSet<PosCoords> = get_contested_spaces(queen_positions, self._dimensions)
@@ -90,7 +91,6 @@ impl Solver {
                 let mut new_board = board.clone();
                 new_board.add_queen(new_queen_pos);
                 let queen_positions = new_board.get_queen_positions();
-                // self._visited.insert(queen_positions.clone()); // FIXUP (Move elsewhere).
                 let check_result = check_board(new_board);
                 (queen_positions, check_result)
             })
@@ -105,6 +105,7 @@ impl Solver {
         next_best_moves
     }
 
+    /// Add a board and its equivalent reflections to the visisted table.
     fn add_state_and_reflections_to_visited(&mut self, board: &Board) {
         self._visited.insert(board.clone());
         board.get_reflections().into_iter().for_each(|board| {
