@@ -43,7 +43,7 @@ impl Solver {
     /// add it (and its reflections) to the solutions set. If it is not a
     /// solution, add it (and its reflections) to the visited set, then
     /// calculate the next possible moves.
-    pub fn _tick(&mut self) {
+    pub fn tick(&mut self) {
         if let Some(queen_positions) = self.state_heap.pop() {
             let board = queen_positions.iter().cloned().collect::<Board>();
             self.add_state_and_reflections_to_visited(&board);
@@ -62,14 +62,14 @@ impl Solver {
     pub fn get_next_solution(&mut self) {
         let initial_soln_count = self.solutions.len();
         while self.solutions.len() == initial_soln_count {
-            self._tick();
+            self.tick();
         }
     }
 
     /// Find all of the solutions to the eight queen problem.
     pub fn solve(&mut self) -> HashSet<CoordList> {
         while !self.is_done() {
-            self._tick();
+            self.tick();
         }
         self.solutions.clone()
     }
@@ -183,7 +183,7 @@ mod cummulative_tick_bench {
         let b: Board = get_n_random_coords(2).into_iter().collect();
         let mut s = Solver::from(b);
         bencher.iter(|| {
-            let _ = s._tick();
+            let _ = s.tick();
         });
     }
 
@@ -192,7 +192,7 @@ mod cummulative_tick_bench {
         let b: Board = get_n_random_coords(4).into_iter().collect();
         let mut s = Solver::from(b);
         bencher.iter(|| {
-            let _ = s._tick();
+            let _ = s.tick();
         });
     }
 
@@ -201,7 +201,7 @@ mod cummulative_tick_bench {
         let b: Board = get_n_random_coords(7).into_iter().collect();
         let mut s = Solver::from(b);
         bencher.iter(|| {
-            let _ = s._tick();
+            let _ = s.tick();
         });
     }
 
@@ -218,7 +218,7 @@ mod cummulative_tick_bench {
 
     fn tick_n_times(solver: &mut Solver, n: u32) {
         for _ in 0..n {
-            solver._tick();
+            solver.tick();
         }
     }
 }
@@ -235,7 +235,7 @@ mod single_tick_bench {
         let mut s = Solver::new();
         tick_n_times(&mut s, 3);
         bencher.iter(|| {
-            let _ = s._tick();
+            let _ = s.tick();
         });
     }
 
@@ -244,7 +244,7 @@ mod single_tick_bench {
         let mut s = Solver::new();
         tick_n_times(&mut s, 31);
         bencher.iter(|| {
-            let _ = s._tick();
+            let _ = s.tick();
         });
     }
 
@@ -253,13 +253,13 @@ mod single_tick_bench {
         let mut s = Solver::new();
         tick_n_times(&mut s, 255);
         bencher.iter(|| {
-            let _ = s._tick();
+            let _ = s.tick();
         });
     }
 
     fn tick_n_times(solver: &mut Solver, n: u32) {
         for _ in 0..n {
-            solver._tick();
+            solver.tick();
         }
     }
 }
