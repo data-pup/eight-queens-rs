@@ -70,4 +70,18 @@ pub fn tick(&mut self) {
 
 ### Improved Tick Implementation
 
+The first thing I did was change the `state_heap` member into a `Vec` rather
+than a `BinaryHeap`. This was an errant choice from early on, wherein I had
+been hoping to sort future states by the number of free spaces available on
+the board.
 
+Using a binary heap was not a good idea for a number of reasons. The binary
+heap is not a good choice for this type of problem to begin with, but further,
+the algorithm should tend towards a depth-first search (DFS) pattern or else
+risk using a large amount of memory. Consider the fact that there are technically
+`64 * 63 = 4032` first moves avaiable. Not all of these are valid of course, but
+the point stands that we would end up with a drastically large queue if we
+followed a breadth-first search (BFS) pattern to find solutions.
+
+After changing this member, the tick method ran about 5,000ns faster, which
+was 1/6th of its original runtime. That is an excellent start!

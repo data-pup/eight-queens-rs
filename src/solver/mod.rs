@@ -1,4 +1,4 @@
-use std::collections::{BinaryHeap, HashSet};
+use std::collections::HashSet;
 
 use checker::{check_board, CheckResult};
 use position::CoordIter;
@@ -9,7 +9,7 @@ use {Board, CoordList, PosCoords};
 #[derive(Clone, Debug)]
 pub struct Solver {
     _solutions: HashSet<CoordList>,
-    _state_heap: BinaryHeap<CoordList>,
+    _state_heap: Vec<CoordList>,
     _visited: HashSet<Board>,
     _dimensions: PosCoords,
 }
@@ -17,8 +17,9 @@ pub struct Solver {
 impl Solver {
     // Create a new solver object.
     pub fn new() -> Solver {
-        let mut _state_heap = BinaryHeap::new();
-        _state_heap.push(vec![]);
+        let mut _state_heap = Vec::new();
+        let default_board = CoordList::new();
+        _state_heap.push(default_board);
         Solver {
             _state_heap,
             _visited: HashSet::new(),
@@ -115,7 +116,7 @@ impl Solver {
 
 impl From<Board> for Solver {
     fn from(board: Board) -> Solver {
-        let mut _state_heap = BinaryHeap::new();
+        let mut _state_heap = Vec::new();
         _state_heap.push(board.get_queen_positions());
         Solver {
             _state_heap,
