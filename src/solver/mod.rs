@@ -47,7 +47,7 @@ impl Solver {
         if let Some(queen_positions) = self.state_heap.pop() {
             let board = queen_positions.iter().cloned().collect::<Board>();
             self.add_state_and_reflections_to_visited(&board);
-            match check_board(board.clone()) {
+            match check_board(&board) {
                 // Process a solution.
                 CheckResult { is_solved, .. } if is_solved => {
                     self.solutions.insert(queen_positions);
@@ -100,7 +100,7 @@ impl Solver {
                 let mut new_board = board.clone();
                 new_board.add_queen(new_queen_pos);
                 let queen_positions = new_board.get_queen_positions();
-                let check_result = check_board(new_board);
+                let check_result = check_board(&new_board);
                 (queen_positions, check_result)
             })
             .collect::<Vec<(Vec<PosCoords>, CheckResult)>>();

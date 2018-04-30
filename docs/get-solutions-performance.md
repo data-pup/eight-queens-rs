@@ -99,7 +99,7 @@ followed a breadth-first search (BFS) pattern to find solutions.
 After changing this member, the tick method ran about 5,000ns faster, which
 was 1/6th of its original runtime. That is an excellent start!
 
-### Benchmarking the Board Checker
+### Improving the Board Checker
 
 The following line from the tick method above uses a function defined in a
 separate `checker` submodule of the project.
@@ -113,7 +113,20 @@ In order to get a better handle on where the most time was being spent in
 a single iteration of the tick method, I needed to add some benchmarks to test
 these helper functions.
 
+Before that however, I saw a clear way to improve the performance of this.
+Notice the following function prototype:
 
+```rust
+pub fn check_board(board: Board) -> CheckResult {
+    // ...
+}
+```
+
+Rather than taking ownership of the board, we can simply borrow the board.
+There isn't any reason that this function would need to mutate the board, and
+if we change the function to borrow a board rather than receive an owned board,
+we can avoid the need to clone the board when checking the validity of its
+state.
 
 
 ```

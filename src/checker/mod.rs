@@ -9,10 +9,10 @@ use Board;
 /// Check the state of the board. Returns a `CheckResult` object, containing
 /// information about whether the given positions contain a conflict, whether
 /// the given positions represent a solution to the eight problem, etc.
-pub fn check_board(board: Board) -> CheckResult {
+pub fn check_board(board: &Board) -> CheckResult {
     let num_queens = board.get_queen_positions().len() as u8;
     let num_free_spaces = get_total_number_of_squares(&board) - num_queens;
-    let has_conflict = board_has_conflict(board);
+    let has_conflict = board_has_conflict(&board);
     let is_solved = num_queens == 8 && !has_conflict;
     CheckResult {
         num_queens,
@@ -36,7 +36,7 @@ mod check_result_tests {
     #[test]
     fn default_board_is_not_a_solution_has_no_conflict() {
         let b = Board::new();
-        let check_res = check_board(b);
+        let check_res = check_board(&b);
         let expected = CheckResult {
             is_solved: false,
             has_conflict: false,
@@ -60,7 +60,7 @@ mod check_result_tests {
     #[test]
     fn board_with_2_adjacent_queens_has_conflict() {
         let b: Board = [(0, 0), (1, 0)].iter().cloned().collect();
-        let check_res = check_board(b);
+        let check_res = check_board(&b);
         let expected = CheckResult {
             is_solved: false,
             has_conflict: true,
@@ -84,7 +84,7 @@ mod check_result_tests {
     #[test]
     fn board_with_two_safe_queens_has_no_conflict() {
         let b: Board = [(0, 0), (7, 2)].iter().cloned().collect();
-        let check_res = check_board(b);
+        let check_res = check_board(&b);
         let expected = CheckResult {
             is_solved: false,
             has_conflict: false,
@@ -119,7 +119,7 @@ mod check_result_tests {
         ].iter()
             .cloned()
             .collect();
-        let check_res = check_board(b);
+        let check_res = check_board(&b);
         let expected = CheckResult {
             is_solved: false,
             has_conflict: true,
@@ -154,7 +154,7 @@ mod check_result_tests {
         ].iter()
             .cloned()
             .collect();
-        let check_res = check_board(b);
+        let check_res = check_board(&b);
         let expected = CheckResult {
             is_solved: true,
             has_conflict: false,

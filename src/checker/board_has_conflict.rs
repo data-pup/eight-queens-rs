@@ -2,7 +2,7 @@ use queen::get_queen_move_sets;
 use {Board, CoordList, PosCoords};
 
 /// Check if the board has any conflicted queens.
-pub fn board_has_conflict(board: Board) -> bool {
+pub fn board_has_conflict(board: &Board) -> bool {
     let dims: PosCoords = board.dims();
     let queens: Vec<PosCoords> = board.get_queen_positions();
     let move_sets = get_queen_move_sets(queens.clone(), dims);
@@ -36,7 +36,7 @@ mod has_conflict_tests {
     #[test]
     fn default_board_is_not_a_solution_has_no_conflict() {
         let b = Board::new();
-        let res = board_has_conflict(b);
+        let res = board_has_conflict(&b);
         assert_eq!(res, false, "Empty board has no conflict.");
     }
 
@@ -54,7 +54,7 @@ mod has_conflict_tests {
     #[test]
     fn board_with_2_adjacent_queens_has_conflict() {
         let b: Board = [(0, 0), (1, 0)].iter().cloned().collect();
-        assert!(board_has_conflict(b));
+        assert!(board_has_conflict(&b));
     }
 
     ///   01234567
@@ -71,7 +71,7 @@ mod has_conflict_tests {
     #[test]
     fn board_with_two_safe_queens_has_no_conflict() {
         let b: Board = [(0, 0), (7, 2)].iter().cloned().collect();
-        let res = board_has_conflict(b);
+        let res = board_has_conflict(&b);
         assert_eq!(res, false);
     }
 
@@ -100,7 +100,7 @@ mod has_conflict_tests {
         ].iter()
             .cloned()
             .collect();
-        assert!(board_has_conflict(b));
+        assert!(board_has_conflict(&b));
     }
 
     ///   01234567
@@ -128,7 +128,7 @@ mod has_conflict_tests {
         ].iter()
             .cloned()
             .collect();
-        let res = board_has_conflict(b);
+        let res = board_has_conflict(&b);
         assert_eq!(res, false);
     }
 }
