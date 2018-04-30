@@ -8,34 +8,34 @@ use {Board, CoordList, PosCoords};
 /// This struct is used to find solutions to the problem, given a board state.
 #[derive(Clone, Debug)]
 pub struct Solver {
-    _solutions: HashSet<CoordList>,
-    _state_heap: Vec<CoordList>,
-    _visited: HashSet<Board>,
-    _dimensions: PosCoords,
+    solutions: HashSet<CoordList>,
+    state_heap: Vec<CoordList>,
+    visited: HashSet<Board>,
+    dimensions: PosCoords,
 }
 
 impl Solver {
     // Create a new solver object.
     pub fn new() -> Solver {
-        let mut _state_heap = Vec::new();
+        let mut state_heap = Vec::new();
         let default_board = CoordList::new();
-        _state_heap.push(default_board);
+        state_heap.push(default_board);
         Solver {
-            _state_heap,
-            _visited: HashSet::new(),
-            _solutions: HashSet::new(),
-            _dimensions: (8, 8),
+            state_heap,
+            visited: HashSet::new(),
+            solutions: HashSet::new(),
+            dimensions: (8, 8),
         }
     }
 
     /// Returns true if the solver is done examining moves.
     pub fn is_done(&self) -> bool {
-        self._state_heap.is_empty()
+        self.state_heap.is_empty()
     }
 
     /// Returns true if the solver has found at least one solution.
     pub fn solution_exists(&self) -> bool {
-        !self._solutions.is_empty()
+        !self.solutions.is_empty()
     }
 
     /// Tick the solver forward one iteration. Attempt to pop an item off of
@@ -44,24 +44,24 @@ impl Solver {
     /// solution, add it (and its reflections) to the visited set, then
     /// calculate the next possible moves.
     pub fn _tick(&mut self) {
-        if let Some(queen_positions) = self._state_heap.pop() {
+        if let Some(queen_positions) = self.state_heap.pop() {
             let board = queen_positions.iter().cloned().collect::<Board>();
             self.add_state_and_reflections_to_visited(&board);
             let state_check = check_board(board.clone());
             if state_check.is_solved {
-                self._solutions.insert(queen_positions);
+                self.solutions.insert(queen_positions);
                 return;
             } else {
                 let next_best_moves = self.get_next_moves(queen_positions);
-                self._state_heap.extend(next_best_moves);
+                self.state_heap.extend(next_best_moves);
             }
         }
     }
 
     /// Progress until the next solution is found.
     pub fn get_next_solution(&mut self) {
-        let initial_soln_count = self._solutions.len();
-        while self._solutions.len() == initial_soln_count {
+        let initial_soln_count = self.solutions.len();
+        while self.solutions.len() == initial_soln_count {
             self._tick();
         }
     }
@@ -71,14 +71,14 @@ impl Solver {
         while !self.is_done() {
             self._tick();
         }
-        self._solutions.clone()
+        self.solutions.clone()
     }
 
     /// Get the next best moves from the board state, given as a list of
     /// position coordinates.
     fn get_next_moves(&self, queen_positions: CoordList) -> Vec<CoordList> {
         let board = queen_positions.iter().cloned().collect::<Board>();
-        let contested: HashSet<PosCoords> = get_contested_spaces(queen_positions, self._dimensions)
+        let contested: HashSet<PosCoords> = get_contested_spaces(queen_positions, self.dimensions)
             .iter()
             .cloned()
             .collect();
@@ -107,22 +107,22 @@ impl Solver {
 
     /// Add a board and its equivalent reflections to the visisted table.
     fn add_state_and_reflections_to_visited(&mut self, board: &Board) {
-        self._visited.insert(board.clone());
+        self.visited.insert(board.clone());
         board.get_reflections().into_iter().for_each(|board| {
-            self._visited.insert(board);
+            self.visited.insert(board);
         });
     }
 }
 
 impl From<Board> for Solver {
     fn from(board: Board) -> Solver {
-        let mut _state_heap = Vec::new();
-        _state_heap.push(board.get_queen_positions());
+        let mut state_heap = Vec::new();
+        state_heap.push(board.get_queen_positions());
         Solver {
-            _state_heap,
-            _visited: HashSet::new(),
-            _solutions: HashSet::new(),
-            _dimensions: board.dims(),
+            state_heap,
+            visited: HashSet::new(),
+            solutions: HashSet::new(),
+            dimensions: board.dims(),
         }
     }
 }
