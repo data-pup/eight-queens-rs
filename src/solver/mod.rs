@@ -114,6 +114,11 @@ impl Solver {
         next_best_moves
     }
 
+    /// Find the uncontested spaces on the board that represent valid squares to place a new queen.
+    fn get_uncontested_spaces(contested_spaces: HashSet<PosCoords>, board_dims: PosCoords) -> HashSet<PosCoords> {
+        unimplemented!();
+    }
+
     /// Add a board and its equivalent reflections to the visisted table.
     fn add_state_and_reflections_to_visited(&mut self, board: &Board) {
         self.visited.insert(board.clone());

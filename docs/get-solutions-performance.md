@@ -131,4 +131,6 @@ state.
 
 ```
 - Remove the need to clone the board to check it, pass a borrow. No mutation.
+- Add benchmarks for get_contested_spaces function in the queens module.
+- Add benchmarks for getting the next moves.
 ```
