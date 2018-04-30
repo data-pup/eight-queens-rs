@@ -98,3 +98,24 @@ followed a breadth-first search (BFS) pattern to find solutions.
 
 After changing this member, the tick method ran about 5,000ns faster, which
 was 1/6th of its original runtime. That is an excellent start!
+
+### Benchmarking the Board Checker
+
+The following line from the tick method above uses a function defined in a
+separate `checker` submodule of the project.
+
+```rust
+let state_check = check_board(board.clone());
+```
+
+This was a step in the process that I was unsure about regarding performance.
+In order to get a better handle on where the most time was being spent in
+a single iteration of the tick method, I needed to add some benchmarks to test
+these helper functions.
+
+
+
+
+```
+- Remove the need to clone the board to check it, pass a borrow. No mutation.
+```

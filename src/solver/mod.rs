@@ -47,13 +47,22 @@ impl Solver {
         if let Some(queen_positions) = self.state_heap.pop() {
             let board = queen_positions.iter().cloned().collect::<Board>();
             self.add_state_and_reflections_to_visited(&board);
-            let state_check = check_board(board.clone());
-            if state_check.is_solved {
-                self.solutions.insert(queen_positions);
-                return;
-            } else {
-                let next_best_moves = self.get_next_moves(queen_positions);
-                self.state_heap.extend(next_best_moves);
+            match check_board(board.clone()) {
+                // Process a solution.
+                CheckResult { is_solved, .. } if is_solved => {
+                    self.solutions.insert(queen_positions);
+                }
+                // Find next moves.
+                CheckResult {
+                    has_conflict,
+                    is_solved,
+                    ..
+                } if !has_conflict && !is_solved =>
+                {
+                    let next_best_moves = self.get_next_moves(queen_positions);
+                    self.state_heap.extend(next_best_moves);
+                }
+                _ => {}
             }
         }
     }

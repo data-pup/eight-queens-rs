@@ -15,10 +15,10 @@ pub fn check_board(board: Board) -> CheckResult {
     let has_conflict = board_has_conflict(board);
     let is_solved = num_queens == 8 && !has_conflict;
     CheckResult {
-        is_solved,
-        has_conflict,
         num_queens,
         num_free_spaces,
+        has_conflict,
+        is_solved,
     }
 }
 
